@@ -1,4 +1,4 @@
-import '../HeroSection/HeroSection_elements.css'
+import '../HeroSection/HeroSection.elements.css'
 import Beach from '../../videos/beach.mp4'
 import Typical from "react-typical";
 
@@ -6,7 +6,7 @@ function HeroSection() {
   return (
     <div className="main">
       <video src={Beach} autoPlay loop muted/>
-      {/*<div className="hero-container">
+      <div className="hero-container">
         <p>
           I love to {""}
           <Typical
@@ -26,9 +26,10 @@ function HeroSection() {
               "swim with sea turtles 🐢",
             ]}
           />
-          <h4>May the force be with me</h4>
         </p>
-      </div>*/}
+        <h5>May the force be with me</h5>
+
+      </div>
     </div>
   );
 }
