@@ -5,7 +5,7 @@ export const homeObjOne = {
     lightTopLine: true, 
     lightTextDesc: true,
     buttonLabel: 'Get Started',
-    description: 'Welcome to my page. I am Paulina an up and coming Web Developer with a focus on front-end code ',
+    description: 'Welcome to my pages. I created this site using ReactJs. I enjoy front end design, but I want to expand in CyberSecurity. ',
     headline: 'Fearless\nStrong \n Ready',
     lightText: true,
     topLine: 'Front-End Developer {}', 
