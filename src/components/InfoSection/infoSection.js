@@ -22,9 +22,9 @@ const InfoSection = ({primary, lightBg, imgStart, lightTopLine, lightTextDesc, b
                         <Heading lightText={lightText}>{headline}</Heading>
                         <Subtitle lightTextDesc={lightTextDesc}>{description}</Subtitle>
                         <Link to='/ '>
-                            <Button big fontBig primary={primary}>
+                           {/* <Button big fontBig primary={primary}>
                                 {buttonLabel}
-                            </Button>
+                            </Button>*/}
                         </Link>
                       </TextWrapper> 
                     </InfoColumn>

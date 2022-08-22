@@ -21,11 +21,6 @@ const InfoPhoto = ({primary, lightBg, imgStart, lightTopLine, lightTextDesc, but
                         <TopLine lightTopLine={lightTopLine}>{topLine}</TopLine>
                         <Heading lightText={lightText}>{headline}</Heading>
                         <Subtitle lightTextDesc={lightTextDesc}>{description}</Subtitle>
-                        <Link to='/bucketlist'>
-                            <Button big fontBig primary={primary}>
-                                {buttonLabel}
-                            </Button>
-                        </Link>
                       </TextWrapper> 
                     </InfoColumn>
                     <InfoColumn>
