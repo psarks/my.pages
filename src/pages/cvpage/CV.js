@@ -1,13 +1,18 @@
 import React from 'react';
-import Button from '../../globalStyles';
+import Resume from '../../images/Resume6.png'
+import ScrollToTop from  '../../components/ScrollToTop'
 
-function CV{}{
-    return(
-        <div style={{textAlign:'center'}}>
-            <br/>
-            <a href="./pdf" target="_blank">
-                <Button>Resume</Button>
-            </a>
-        </div>
+const CV = () => {
+    return (
+        <>
+            <div className="resume">
+<ScrollToTop/>
+              <img style={{overflow:'hidden'}}
+               src={Resume} alt='Resume' />
+            </div>
+        
+        </>
     )
 }
+
+export default CV;
