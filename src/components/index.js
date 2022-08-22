@@ -4,4 +4,4 @@ export {default  as InfoPhoto } from './InfoPhoto/infoPhoto'
 export { default as InfoCV } from './InfoCV/infoCV'
 export {default as Footer } from './Footer/Footer';
 export {default as ImageSlider } from './ImageSlider/ImageSlider'
-
+export {default as HeroSection} from './HeroSection/HeroSection'
