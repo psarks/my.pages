@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
+
 
 import { SliderData } from '../../components/ImageSlider/SliderData';
 import { ImageSlider } from '../../components';
 /*import {ReactTypical} from "@deadcoder0904/react-typical";
 <Img src={img} alt={alt}/>*/
 
-import { Container, Button } from '../../globalStyles'
+import { Container} from '../../globalStyles'
 import {InfoSec, InfoRow, InfoColumn, TextWrapper, TopLine, Heading, Subtitle, ImgWrapper} from './infoPhoto.elements'
 
 

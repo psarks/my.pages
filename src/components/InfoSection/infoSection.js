@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 /*import {ReactTypical} from "@deadcoder0904/react-typical";
 <Img src={img} alt={alt}/>*/
 
-import { Container, Button } from '../../globalStyles'
+import { Container } from '../../globalStyles'
 import {InfoSec, InfoRow, InfoColumn, TextWrapper, TopLine, Heading, Subtitle, ImgWrapper, Img } from './InfoSection.elements'
 
 
