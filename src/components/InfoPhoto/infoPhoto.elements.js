@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const InfoSec = styled.div`
     color: #fff;
-    padding: 160px 0;
+    padding: 0 0;
     background: ${({ lightBg }) => (lightBg ? '#fff' : '#101522')};
     `;
 
@@ -16,7 +16,7 @@ export const InfoRow = styled.div`
 `;
 
 export const InfoColumn = styled.div`
-    margin-bottom: 15px;
+   
     padding-right: 15px;
     padding-left: 15px;
     flex: 1;
