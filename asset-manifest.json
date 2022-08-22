@@ -1,0 +1,42 @@
+{
+  "files": {
+    "main.css": "/my.pages/static/css/main.f2e9d369.chunk.css",
+    "main.js": "/my.pages/static/js/main.1f02e329.chunk.js",
+    "main.js.map": "/my.pages/static/js/main.1f02e329.chunk.js.map",
+    "runtime-main.js": "/my.pages/static/js/runtime-main.aee9a41c.js",
+    "runtime-main.js.map": "/my.pages/static/js/runtime-main.aee9a41c.js.map",
+    "static/js/2.044caefb.chunk.js": "/my.pages/static/js/2.044caefb.chunk.js",
+    "static/js/2.044caefb.chunk.js.map": "/my.pages/static/js/2.044caefb.chunk.js.map",
+    "index.html": "/my.pages/index.html",
+    "static/css/main.f2e9d369.chunk.css.map": "/my.pages/static/css/main.f2e9d369.chunk.css.map",
+    "static/js/2.044caefb.chunk.js.LICENSE.txt": "/my.pages/static/js/2.044caefb.chunk.js.LICENSE.txt",
+    "static/media/Resume6.a05988c2.png": "/my.pages/static/media/Resume6.a05988c2.png",
+    "static/media/babypine.2dddb307.jpg": "/my.pages/static/media/babypine.2dddb307.jpg",
+    "static/media/backtofutureside.ac960629.jpg": "/my.pages/static/media/backtofutureside.ac960629.jpg",
+    "static/media/backtothefutureback.843378bf.jpg": "/my.pages/static/media/backtothefutureback.843378bf.jpg",
+    "static/media/beach.c3931086.mp4": "/my.pages/static/media/beach.c3931086.mp4",
+    "static/media/ccentrance.b387d347.jpg": "/my.pages/static/media/ccentrance.b387d347.jpg",
+    "static/media/firework.f8b7af45.jpg": "/my.pages/static/media/firework.f8b7af45.jpg",
+    "static/media/kanapalisurf.d87104f0.jpg": "/my.pages/static/media/kanapalisurf.d87104f0.jpg",
+    "static/media/laloire.73e8f127.jpg": "/my.pages/static/media/laloire.73e8f127.jpg",
+    "static/media/life.png": "/my.pages/static/media/life.e863cd12.png",
+    "static/media/mauifog.cab21354.jpg": "/my.pages/static/media/mauifog.cab21354.jpg",
+    "static/media/mauigold.eaa9e493.jpg": "/my.pages/static/media/mauigold.eaa9e493.jpg",
+    "static/media/mauigreen.a2527a19.jpg": "/my.pages/static/media/mauigreen.a2527a19.jpg",
+    "static/media/mauipineapple.276af429.jpg": "/my.pages/static/media/mauipineapple.276af429.jpg",
+    "static/media/mauiwaves.30827ed3.jpg": "/my.pages/static/media/mauiwaves.30827ed3.jpg",
+    "static/media/mauiworkers.328cad1e.jpg": "/my.pages/static/media/mauiworkers.328cad1e.jpg",
+    "static/media/me.svg": "/my.pages/static/media/me.d91f6853.svg",
+    "static/media/sandiego.8cd50da9.jpg": "/my.pages/static/media/sandiego.8cd50da9.jpg",
+    "static/media/spongebob.cb0932ee.jpg": "/my.pages/static/media/spongebob.cb0932ee.jpg",
+    "static/media/stormtroopers.3deb79cd.jpg": "/my.pages/static/media/stormtroopers.3deb79cd.jpg",
+    "static/media/vessel.60e9a415.jpg": "/my.pages/static/media/vessel.60e9a415.jpg",
+    "static/media/wtc.331b7ad2.jpg": "/my.pages/static/media/wtc.331b7ad2.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.aee9a41c.js",
+    "static/js/2.044caefb.chunk.js",
+    "static/css/main.f2e9d369.chunk.css",
+    "static/js/main.1f02e329.chunk.js"
+  ]
+}
