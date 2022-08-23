@@ -7,7 +7,7 @@ const CV = () => {
     <>
       <div className="resume">
         <ScrollToTop />
-        <img style={{ overflow: "hidden" }} src={Resume} alt="Resume" />
+        <img src={Resume} alt="Resume" />
       </div>
     </>
   );
