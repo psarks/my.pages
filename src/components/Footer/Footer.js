@@ -26,9 +26,9 @@ const Footer = () => {
                         <FooterLinkTitle>
                             Social Media
                         </FooterLinkTitle>
-                        <FooterLink to='/'>Facebook</FooterLink>
-                        <FooterLink to='/'>Instagram</FooterLink>
-                        <FooterLink to='/'>Twitter</FooterLink>
+                        <FooterLink to='https://www.facebook.com/pausarquis'>Facebook</FooterLink>
+                        <FooterLink to='https://www.instagram.com/sarkispau'>Instagram</FooterLink>
+                        <FooterLink to='https://www.twitter.com/pausers13'>Twitter</FooterLink>
                     </FooterLinksItems>
                 </FooterLinksWrapper>
                 <FooterLinksWrapper> 
@@ -36,7 +36,7 @@ const Footer = () => {
                         <FooterLinkTitle>
                             Open Source
                         </FooterLinkTitle>
-                        <FooterLink to='/'>Github</FooterLink>
+                        <FooterLink to='https://www.github.com/psarks'>Github</FooterLink>
                     </FooterLinksItems>
                 </FooterLinksWrapper>
             </FooterLinksContainer>
