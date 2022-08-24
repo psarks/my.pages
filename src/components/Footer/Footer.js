@@ -48,16 +48,16 @@ const Footer = () => {
                     </SocialLogo>
                     <WebsiteRights>PS © 2020 </WebsiteRights>
                     <SocialIcons>
-                        <SocialIconLink href='/' target="_blank" aria-label="Facebook">
+                        <SocialIconLink href='https://www.facebook.com/pausarquis' target="_blank" aria-label="Facebook">
                             <FaFacebook/>
                         </SocialIconLink>
-                        <SocialIconLink href='/' target="_blank" aria-label="Instagram">
+                        <SocialIconLink href='https://www.instagram.com/sarkispau' target="_blank" aria-label="Instagram">
                             <FaInstagram/>
                         </SocialIconLink>
-                        <SocialIconLink href='/' target="_blank" aria-label="Twitter">
+                        <SocialIconLink href='https://www.twitter.com/pausers13' target="_blank" aria-label="Twitter">
                             <FaTwitter/>
                         </SocialIconLink>
-                        <SocialIconLink href='/' target="_blank" aria-label="Github">
+                        <SocialIconLink href='https://www.github.com/psarks' target="_blank" aria-label="Github">
                             <FaGithub/>
                         </SocialIconLink>
                     </SocialIcons>
