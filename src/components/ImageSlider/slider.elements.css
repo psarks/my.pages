@@ -4,7 +4,7 @@
 }
 
 .slide.active{
-    opacity: 4;
+    opacity: 1;
     transition-duration: 2s;
-    transform: scale(1.05);
+    width: 100%;
 }

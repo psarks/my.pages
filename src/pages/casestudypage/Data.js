@@ -77,3 +77,41 @@ export const homeObjFive = {
     alt: 'Image', 
     start: ''
 };
+
+// Content for the Case Study page.
+// Tip: add one specific story (a problem you solved, what you tried, what fixed it)
+// and any numbers you can share (devices supported, tickets per week).
+export const caseStudy = {
+    title: 'Keeping a middle school connected',
+    lede: 'Since 2020 I have been the on-site technology lead at DePortola Middle School (San Diego Unified). When a projector dies five minutes before class or a printer drops off the network, I am the person who gets it working again, and who makes sure it stays that way.',
+    facts: [
+        { label: 'Role', value: 'Network Support Media Technician' },
+        { label: 'Since', value: 'August 2020' },
+        { label: 'Users', value: 'Students, teachers & staff' },
+        { label: 'Scope', value: 'Network, devices, AV/TV' },
+    ],
+    sections: [
+        {
+            heading: 'The challenge',
+            text: 'A school runs on technology that has to work every period of every day. Teachers need their microphones, projectors, printers, and computers ready the moment class starts, and the local area network behind them has to keep up with constant changes and additions.',
+        },
+        {
+            heading: 'My approach',
+            points: [
+                'Triage first: isolate whether a problem is hardware, software, or connection before touching anything, so fixes are fast and targeted.',
+                'Own the follow-up: track maintenance and service requests for network changes and additions through to completion.',
+                'Support the LAN: help coordinate the implementation and maintenance of the school site\'s local area network.',
+                'Keep AV/TV running: provide audiovisual and television support for classrooms and school events.',
+                'Know what we have: maintain the technology inventory so equipment is accounted for and ready to deploy.',
+            ],
+        },
+        {
+            heading: 'Teaching, not just fixing',
+            text: 'The best fix is the one people do not need to call me for again. I provide training and technical assistance to staff so they can handle common issues confidently. My background in interaction design (UCSD) shapes how I explain technology: start from what the user is trying to do, not from the technical details.',
+        },
+        {
+            heading: 'What I took from it',
+            text: 'Supporting a live school environment taught me to stay calm under time pressure, communicate clearly with non-technical users, and document what I do. These are the same skills I bring to systems administration and ed-tech implementation work.',
+        },
+    ],
+};

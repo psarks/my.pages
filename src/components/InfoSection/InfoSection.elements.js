@@ -2,7 +2,11 @@ import styled from 'styled-components';
 
 export const InfoSec = styled.div`
     color: #fff;
-    padding: 160px 0;
+    padding: 170px 0 110px;
+
+    @media screen and (max-width: 1200px) {
+        padding: 60px 0 80px;
+    }
     background: ${({ lightBg }) => (lightBg ? '#fff' : '#101522')};
     `;
 
@@ -11,21 +15,26 @@ export const InfoRow = styled.div`
     margin: 0 -15px -15px -15px;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
+    gap: 48px;
     flex-direction: ${({ imgStart }) => (imgStart ? 'row-reverse' : 'row')
 };
+
+    @media screen and (max-width: 1200px) {
+        flex-direction: column-reverse;
+        flex-wrap: nowrap;
+    }
 `;
 
 export const InfoColumn = styled.div`
-    margin-bottom: 15px;
     padding-right: 15px;
     padding-left: 15px;
-    flex: 1;
-    max-width: 50%;
-    flex-basis: 50%;
+    flex: 0 1 540px;
+    max-width: 540px;
 
-    @media screen and (max-width: 768px){
-        max-width: 100%;
-        flex-basis: 100%;
+    @media screen and (max-width: 1200px) {
+        flex: none;
+        width: 100%;
         display: flex;
         justify-content: center;
     }
@@ -33,12 +42,7 @@ export const InfoColumn = styled.div`
 
 export const TextWrapper = styled.div`
     max-width: 540px;
-    padding-top: 0;
-    padding-bottom: 60px;
-    
-    @media screen and (max-width: 768px) {
-        padding-bottom: 65px;
-    }
+    padding: 0;
 
     `;
 
@@ -58,17 +62,18 @@ export const Heading = styled.h1`
     `;
 
 export const Subtitle = styled.p`
-    max-width: 440px;
-    margin-bottom: 35px;
+    max-width: 480px;
+    margin-bottom: 0;
     font-size: 18px;
     line-height: 24px;
     color: ${({ lightTextDesc }) => (lightTextDesc ? '#a9b3c1' : '#1c2237')};
     `;
 
 export const ImgWrapper = styled.div`
-    max-width: 555px;
+    max-width: 540px;
+    width: 100%;
     display: flex;
-    justify-content: ${({ start }) => (start ? 'flex-start' : 'flex-end')};
+    justify-content: center;
     `;
 
 export const Img = styled.img`
@@ -77,6 +82,6 @@ export const Img = styled.img`
     max-width: 100%;
     vertical-align: middle;
     display: inline-block;
-    max-height: 500px; 
+    max-height: 440px;
     `;
 

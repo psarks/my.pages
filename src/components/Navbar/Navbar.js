@@ -52,7 +52,7 @@ const Navbar = () => {
                             <NavLinks to='/projects'>Projects</NavLinks>
                         </NavItem>
                         <NavItem>
-                            <NavLinks to='/case study'>Case Study</NavLinks>
+                            <NavLinks to='/casestudy'>Case Study</NavLinks>
                         </NavItem>
                         <NavItemBtn>
                             { button ? (<NavBtnLink to="/bucketlist">

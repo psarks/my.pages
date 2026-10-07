@@ -46,7 +46,7 @@ const Footer = () => {
                         <SocialIcon/>
                         PS
                     </SocialLogo>
-                    <WebsiteRights>PS © 2020 </WebsiteRights>
+                    <WebsiteRights>PS © {new Date().getFullYear()} </WebsiteRights>
                     <SocialIcons>
                         <SocialIconLink href='https://www.facebook.com/pausarquis' target="_blank" aria-label="Facebook">
                             <FaFacebook/>

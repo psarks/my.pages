@@ -8,7 +8,7 @@ function HeroSection() {
       <video src={Beach} autoPlay loop muted/>
       <div className="hero-container">
         <p>
-          I love to {""}
+          Someday I want to {""}
           <Typical
             loop={Infinity}
             wrapper="b"
@@ -16,8 +16,6 @@ function HeroSection() {
               "write a book 📖",
               6000,
               "go to a Champions league game⚽",
-              6000,
-              "go to a World Cup game⚽",
               6000,
               "travel cross country by car or by train 🚙",
               6000,
@@ -27,6 +25,9 @@ function HeroSection() {
             ]}
           />
         </p>
+        <div className="checked-off">
+          <span className="check">✓</span> Checked off: World Cup games in North America, summer 2026 ⚽
+        </div>
         <h5>May the force be with me</h5>
 
       </div>

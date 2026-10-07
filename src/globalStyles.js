@@ -7,6 +7,9 @@ const GlobalStyle = createGlobalStyle`
             padding: 0;
             font-family: 'Source Sans Pro', sans-serif;
         }
+        html, body {
+            background: #101522;
+        }
     `;
 
     export const Container = styled.div`

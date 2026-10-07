@@ -3,7 +3,8 @@ import { IoIosArrowBack, IoIosArrowForward} from 'react-icons/io';
 
 export const Section = styled.div`
     position: relative;
-    height: 100vh;
+    width: 100%;
+    max-width: 540px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,16 +12,20 @@ export const Section = styled.div`
 `;
 
 export const Img = styled.img`
-    width: 500px;
-    height: 350px;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
     border-radius: 10px;
 
 `;
 
 export const NavRight = styled(IoIosArrowForward)`
     position: absolute;
-    top: 46%;
-    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 8px;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
     font-size: 3rem;
     color: #fff;
     z-index: 10;
@@ -31,8 +36,10 @@ export const NavRight = styled(IoIosArrowForward)`
 
 export const NavLeft = styled(IoIosArrowBack)`
     position: absolute;
-    top: 46%;
-    left: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 8px;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
     font-size: 3rem;
     color: #fff;
     z-index: 10;
