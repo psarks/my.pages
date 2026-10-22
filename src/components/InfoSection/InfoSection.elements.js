@@ -47,10 +47,12 @@ export const TextWrapper = styled.div`
     `;
 
 export const TopLine = styled.div`
-    color: ${({ lightTopLine }) => (lightTopLine ? '#a9b3c1' : '#4b59F7')};
-    font-size: 18px;
-    line-height: 16px;
-    letter-spacing: 1.4px;
+    color: ${({ lightTopLine }) => (lightTopLine ? '#c9d1ff' : '#4b59F7')};
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
     margin-bottom: 16px;
     `;
 

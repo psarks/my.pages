@@ -1,7 +1,7 @@
 import React from 'react'
 import { FaFacebook, FaInstagram, FaTwitter, FaGithub } from 'react-icons/fa'
-import { Button } from '../../globalStyles'
-import { FooterContainer, FooterSubscription, FooterSubHeading, FooterSubText, Form, FormInput, FooterLinksContainer, FooterLinksWrapper, FooterLinksItems,FooterLinkTitle, FooterLink, SocialMedia, SocialMediaWrap, SocialLogo, SocialIcons, SocialIcon, WebsiteRights, SocialIconLink} from './Footer.elements'
+import { PrimaryLink } from '../ui'
+import { FooterContainer, FooterSubscription, FooterSubHeading, FooterSubText, FooterLinksContainer, FooterLinksWrapper, FooterLinksItems,FooterLinkTitle, FooterLink, SocialMedia, SocialMediaWrap, SocialLogo, SocialIcons, SocialIcon, WebsiteRights, SocialIconLink} from './Footer.elements'
 
 
 const Footer = () => {
@@ -10,15 +10,12 @@ const Footer = () => {
         <FooterContainer>
             <FooterSubscription>
                 <FooterSubHeading>
-                Lets Chat!
+                Let's chat!
                 </FooterSubHeading>
                 <FooterSubText>
-                    Or just hit Like!
+                    Questions, ideas, or just want to say hi?
                 </FooterSubText>
-                <Form>
-                    <FormInput name="email" type="email" placeholder="Your Email"/>
-                    <Button fontBig>Subscribe</Button>
-                </Form>
+                <PrimaryLink to='/about'>Get in touch</PrimaryLink>
             </FooterSubscription>
             <FooterLinksContainer>
                 <FooterLinksWrapper>

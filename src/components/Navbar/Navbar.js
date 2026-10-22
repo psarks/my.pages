@@ -1,67 +1,43 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { IconContext } from 'react-icons/lib';
-import { Button} from '../../globalStyles'
 import {Nav, NavbarContainer, NavLogo, NavIcon, HamburgerMenu, NavMenu, NavItem, NavLinks, NavItemBtn,NavBtnLink } from './navbar.elements'
+
+const links = [
+    { to: '/', label: 'Home', exact: true },
+    { to: '/about', label: 'About' },
+    { to: '/photography', label: 'Photography' },
+    { to: '/projects', label: 'Projects' },
+    { to: '/casestudy', label: 'Case Study' },
+    { to: '/bucketlist', label: 'Bucket List' },
+];
 
 const Navbar = () => {
     const [click, setClick] = useState(false);
-    const [button, setButton] = useState(true);
 
     const handleClick = () => setClick(!click);
+    const closeMenu = () => setClick(false);
 
-    const showButton = () => {
-        if(window.innerWidth <= 960) {
-            setButton(false)
-        } else{
-            setButton(true)
-        }
-    }
-
-    useEffect(() => {
-        showButton();
-    }, []);
-
-    window.addEventListener('resize', showButton);
     return (
         <>
         <IconContext.Provider value={{color: '#fff'}}>
             <Nav>
                 <NavbarContainer>
-                    <NavLogo to="/" onClick={handleClick} click={click}>
+                    <NavLogo to="/" onClick={closeMenu}>
                         <NavIcon/>
                         PS
                     </NavLogo>
                     <HamburgerMenu onClick={handleClick}>
-                       {click ? <FaTimes /> : <FaBars /> } 
+                       {click ? <FaTimes /> : <FaBars /> }
                     </HamburgerMenu>
-                    <NavMenu onClick={handleClick} click={click}>
-                        <NavItem>
-                            <NavLinks to='/'>Home </NavLinks>
-                        </NavItem>
-                        <NavItem>
-                            <NavLinks to='/about'>About</NavLinks>
-                        </NavItem>
-                        <NavItem>
-                            <NavLinks to='/cv'>CV</NavLinks>
-                        </NavItem>
-                        <NavItem>
-                            <NavLinks to='/photography'>Photography</NavLinks>
-                        </NavItem>
-                        <NavItem>
-                            <NavLinks to='/projects'>Projects</NavLinks>
-                        </NavItem>
-                        <NavItem>
-                            <NavLinks to='/casestudy'>Case Study</NavLinks>
-                        </NavItem>
+                    <NavMenu onClick={closeMenu} $open={click}>
+                        {links.map(({ to, label, exact }) => (
+                            <NavItem key={to}>
+                                <NavLinks to={to} exact={exact}>{label}</NavLinks>
+                            </NavItem>
+                        ))}
                         <NavItemBtn>
-                            { button ? (<NavBtnLink to="/bucketlist">
-                                <Button primary>BucketList</Button> 
-                            </NavBtnLink>): (<NavBtnLink to="/bucketlist">
-                                <Button fontBig primary>
-                                    BucketList
-                                </Button>
-                            </NavBtnLink>) }
+                            <NavBtnLink to="/cv">View CV</NavBtnLink>
                         </NavItemBtn>
                     </NavMenu>
                 </NavbarContainer>
