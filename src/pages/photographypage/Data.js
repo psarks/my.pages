@@ -11,7 +11,8 @@ export const homeObjThree = {
     lightTextDesc: true,
     buttonLabel: 'Get Started',
     description: 'My photography is my way to be everywhere, without being seen. I love being behind the camera not in front of it. I do believe we all can see the same photograph in many different ways.',
-    headline: 'Focus.Grow.Inspire',
+    // tagline shown without periods, matching the About page
+    headline: 'Focus Grow Inspire',
     lightText: true,
     topLine: 'Photography', 
     

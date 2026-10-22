@@ -10,7 +10,7 @@ import { Container} from '../../globalStyles'
 import {InfoSec, InfoRow, InfoColumn, TextWrapper, TopLine, Heading, Subtitle, ImgWrapper} from './infoPhoto.elements'
 
 
-const InfoPhoto = ({primary, lightBg, imgStart, lightTopLine, lightTextDesc, buttonLabel, description, headline, lightText, topLine, img, alt, start}) => {
+const InfoPhoto = ({primary, lightBg, imgStart, lightTopLine, lightTextDesc, buttonLabel, description, headline, lightText, topLine, img, alt, start, current, onChange}) => {
     return (
         <>
           <InfoSec lightBg={lightBg}>
@@ -25,7 +25,7 @@ const InfoPhoto = ({primary, lightBg, imgStart, lightTopLine, lightTextDesc, but
                     </InfoColumn>
                     <InfoColumn>
                         <ImgWrapper start={start}>
-                        <ImageSlider slides={SliderData}/> 
+                        <ImageSlider slides={SliderData} current={current} onChange={onChange}/> 
                             
                         </ImgWrapper>
                         

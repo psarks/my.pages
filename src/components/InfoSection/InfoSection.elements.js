@@ -31,19 +31,32 @@ export const InfoRow = styled.div`
 export const InfoColumn = styled.div`
     padding-right: 15px;
     padding-left: 15px;
-    flex: 0 1 540px;
-    max-width: 540px;
+    /* text column gets the larger share so it stays the visual focus */
+    flex: 0 1 600px;
+    max-width: 600px;
+
+    /* the photo column (second child) is narrower than the text */
+    &:last-child {
+        flex: 0 1 380px;
+        max-width: 380px;
+    }
 
     @media screen and (max-width: 1200px) {
         flex: none;
         width: 100%;
+        max-width: 600px;
         display: flex;
         justify-content: center;
+
+        &:last-child {
+            flex: none;
+            max-width: 600px;
+        }
     }
     `;
 
 export const TextWrapper = styled.div`
-    max-width: 540px;
+    max-width: 600px;
     padding: 0;
 
     `;
@@ -60,16 +73,20 @@ export const TopLine = styled.div`
 
 export const Heading = styled.h1`
     margin-bottom: 24px;
-    font-size: 48px;
+    font-size: 56px;
     line-height: 1.1;
+
+    @media screen and (max-width: 768px) {
+        font-size: 42px;
+    }
     color: ${({ lightText}) => (lightText ? '#f7f8fa' : '#1c2237')};
     `;
 
 export const Subtitle = styled.p`
-    max-width: 480px;
+    max-width: 540px;
     margin-bottom: 0;
-    font-size: 18px;
-    line-height: 24px;
+    font-size: 19px;
+    line-height: 1.6;
     color: ${({ lightTextDesc }) => (lightTextDesc ? '#a9b3c1' : '#1c2237')};
     `;
 
@@ -123,14 +140,14 @@ export const Img = styled.img`
     vertical-align: middle;
     display: inline-block;
     border-radius: 32px;
-    /* the SVG's own size is small, so set the height explicitly; capped by viewport height so it can't dominate short screens */
-    height: min(560px, 70vh);
+    /* the SVG's own size is small, so set the height explicitly: 400px max on desktop, 300px on phones */
+    height: min(400px, 60vh);
     max-width: 100%;
     aspect-ratio: 260 / 321;
     object-fit: cover;
 
     @media screen and (max-width: 768px) {
-        height: min(420px, 60vh);
+        height: min(300px, 50vh);
     }
     `;
 

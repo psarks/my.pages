@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Container } from '../../globalStyles';
 
@@ -29,22 +29,26 @@ const sections = [
 const Page = styled.section`
   background: #101522;
   color: #fff;
-  padding: 120px 0 110px;
+  /* tighter top padding so the intro starts closer to the navbar */
+  padding: 72px 0 96px;
+  /* keeps the portrait glow from causing sideways scroll */
+  overflow: hidden;
   @media screen and (max-width: 900px) {
-    padding: 60px 0 80px;
+    padding: 40px 0 72px;
   }
 `;
 
 const Intro = styled.div`
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  gap: 56px;
+  gap: 40px;
   align-items: center;
-  margin-bottom: 72px;
+  /* was 72px: less empty space between "Live. Learn. Lead." and "My story" */
+  margin-bottom: 36px;
   @media screen and (max-width: 900px) {
     grid-template-columns: 1fr;
-    gap: 32px;
-    margin-bottom: 48px;
+    gap: 24px;
+    margin-bottom: 28px;
   }
 `;
 
@@ -71,28 +75,51 @@ const Lede = styled.p`
   max-width: 560px;
 `;
 
+// slow rotation for the light behind the portrait
+const flow = keyframes`
+  from { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  50%  { transform: translate(-50%, -50%) rotate(180deg) scale(1.08); }
+  to   { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+`;
+
 const PortraitFrame = styled.figure`
   position: relative;
+  isolation: isolate;
   width: 100%;
-  max-width: 340px;
+  /* smaller portrait (was 340px) shortens the intro row */
+  max-width: 280px;
   justify-self: center;
   margin: 0 18px 18px 0;
   aspect-ratio: 560 / 756;
   @media screen and (max-width: 900px) {
-    max-width: 240px;
+    max-width: 200px;
     order: -1;
   }
 
-  /* offset outline frame behind the picture */
+  /* flowing light behind the picture (replaces the old offset outline frame) */
   &::before {
     content: '';
     position: absolute;
-    inset: 0;
-    border: 2px solid #d5dbe3;
-    border-radius: 22px;
-    transform: translate(18px, 18px) rotate(3deg);
-    transition: transform 0.5s ease;
-    z-index: 0;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    width: 130%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #4b59f7, #4ade80, #0467fb, #8fa0ff, #4b59f7);
+    /* radial mask gives soft edges without a costly blur filter */
+    -webkit-mask-image: radial-gradient(circle, #000 25%, transparent 68%);
+    mask-image: radial-gradient(circle, #000 25%, transparent 68%);
+    opacity: 0.6;
+    will-change: transform;
+    transform: translate(-50%, -50%);
+    animation: ${flow} 16s linear infinite;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+    }
   }
 
   img {
@@ -104,19 +131,6 @@ const PortraitFrame = styled.figure`
     border-radius: 22px;
     box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
     transition: opacity 0.6s ease;
-  }
-  img.photo {
-    z-index: 1;
-  }
-  img.cartoon {
-    z-index: 2;
-  }
-
-  &:hover img.cartoon {
-    opacity: 0;
-  }
-  &:hover::before {
-    transform: translate(10px, 10px) rotate(0deg);
   }
 `;
 
@@ -140,7 +154,8 @@ const Story = styled.div`
     font-size: 17px;
     line-height: 1.7;
     color: #c9d1dd;
-    margin-bottom: 32px;
+    /* was 32px: tighter spacing between story sections */
+    margin-bottom: 22px;
   }
 `;
 
@@ -192,7 +207,8 @@ const About = () => (
       <Intro>
         <div>
           <TopLine>About Me</TopLine>
-          <Heading>Live. Learn. Lead.</Heading>
+          {/* tagline shown without periods */}
+          <Heading>Live Learn Lead</Heading>
           <Lede>
             I'm Paulina Alejandra Sarquis Muñoz, an IT and network support
             specialist with a background in UX and front-end development. I like
@@ -200,8 +216,8 @@ const About = () => (
           </Lede>
         </div>
         <PortraitFrame>
-          <img className="photo" src={`${process.env.PUBLIC_URL}/paulina-portrait.jpg`} alt="" aria-hidden="true" />
-          <img className="cartoon" src={`${process.env.PUBLIC_URL}/paulina-bw-navy.jpg`} alt="Black and white portrait of Paulina Sarquis Muñoz, smiling" />
+          {/* original photo only; the black and white hover-swap image was removed */}
+          <img src={`${process.env.PUBLIC_URL}/paulina-portrait.jpg`} alt="Portrait of Paulina Sarquis Muñoz, smiling" />
         </PortraitFrame>
       </Intro>
 

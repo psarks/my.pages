@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { RiBriefcase4Line, RiMedalLine, RiToolsLine, RiBook2Line, RiGlobalLine } from "react-icons/ri";
 import { Container } from "../../globalStyles";
+import { Eyebrow, Pill, PrimaryAnchor, GhostLink } from "../../components/ui";
 
 const pdfUrl = `${process.env.PUBLIC_URL}/Paulina-Sarquis-Resume.pdf`;
 
@@ -45,96 +47,120 @@ const coursework = [
   "Threat and Vulnerability",
 ];
 
+// Dark page like the rest of the site (the CV used to be a white "paper" sheet)
 const Page = styled.section`
   background: #101522;
-  padding: 60px 0 100px;
+  color: #fff;
+  padding: 96px 0 110px;
   min-height: calc(100vh - 80px);
-`;
-
-const Paper = styled.article`
-  background: #fff;
-  color: #1c2237;
-  max-width: 960px;
-  margin: 0 auto;
-  border-radius: 10px;
-  padding: 56px 64px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-  @media screen and (max-width: 768px) {
-    padding: 32px 22px;
+  @media screen and (max-width: 900px) {
+    padding: 48px 0 80px;
   }
 `;
 
 const Header = styled.header`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 24px;
   flex-wrap: wrap;
-  padding-bottom: 28px;
-  border-bottom: 3px solid #4b59f7;
-  margin-bottom: 36px;
+  margin-bottom: 48px;
 `;
 
 const Name = styled.h1`
-  font-size: 38px;
+  font-size: 56px;
   line-height: 1.1;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  @media screen and (max-width: 768px) {
+    font-size: 38px;
+  }
 `;
 
 const Title = styled.p`
-  font-size: 18px;
-  color: #4b59f7;
-  font-weight: 700;
+  font-size: 19px;
+  color: #c9d1dd;
 `;
 
 const Meta = styled.p`
   font-size: 15px;
-  color: #5b6378;
+  color: #8a94a8;
   margin-top: 8px;
 `;
 
-const Download = styled.a`
-  background: #4b59f7;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 700;
-  border-radius: 6px;
-  padding: 12px 22px;
-  white-space: nowrap;
-  &:hover {
-    background: #0467fb;
-  }
+const Actions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
 `;
 
 const Columns = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 48px;
-  @media screen and (max-width: 768px) {
+  gap: 22px;
+  align-items: start;
+  @media screen and (max-width: 900px) {
     grid-template-columns: 1fr;
-    gap: 8px;
   }
 `;
 
-const H2 = styled.h2`
-  font-size: 14px;
-  letter-spacing: 1.6px;
-  text-transform: uppercase;
-  color: #5b6378;
-  margin-bottom: 16px;
+const Stack = styled.div`
+  display: grid;
+  gap: 22px;
 `;
 
-const Block = styled.div`
-  margin-bottom: 36px;
+// Dark rounded card with the same hover lift as the Bucket List cards
+const Card = styled.section`
+  position: relative;
+  background: #1c2237;
+  border: 1px solid #2c3554;
+  border-radius: 14px;
+  padding: 28px 26px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  &:hover {
+    border-color: #4b59f7;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35);
+  }
+`;
+
+// Icon badge + section title row at the top of each card
+const CardHead = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+`;
+
+const Icon = styled.div`
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #8fa0ff;
+  background: rgba(75, 89, 247, 0.16);
+`;
+
+const H2 = styled.h2`
+  font-size: 22px;
 `;
 
 const Job = styled.div`
-  margin-bottom: 28px;
+  padding-top: 22px;
+  margin-top: 22px;
+  border-top: 1px solid #2c3554;
+  &:first-of-type {
+    padding-top: 0;
+    margin-top: 0;
+    border-top: none;
+  }
 `;
 
 const JobTop = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 12px;
   flex-wrap: wrap;
 `;
@@ -143,24 +169,33 @@ const Role = styled.h3`
   font-size: 19px;
 `;
 
-const Dates = styled.span`
-  font-size: 15px;
-  color: #5b6378;
-  white-space: nowrap;
-`;
-
 const Org = styled.p`
   font-size: 15px;
-  color: #3a4256;
-  margin: 2px 0 10px;
+  font-weight: 700;
+  color: #8fa0ff;
+  margin: 4px 0 12px;
 `;
 
 const Points = styled.ul`
-  padding-left: 20px;
+  list-style: none;
   li {
+    position: relative;
+    padding-left: 22px;
     font-size: 16px;
-    line-height: 1.55;
-    margin-bottom: 6px;
+    line-height: 1.6;
+    color: #b8c0cf;
+    margin-bottom: 8px;
+  }
+  /* small blue dot in place of the default bullet */
+  li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0.65em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4b59f7;
   }
 `;
 
@@ -171,18 +206,21 @@ const Chips = styled.ul`
   gap: 8px;
   margin-bottom: 18px;
   li {
-    background: #eef0fe;
-    color: #2b3245;
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 14px;
+    font-size: 13px;
+    color: #c9d1ff;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid #2c3554;
   }
 `;
 
 const SubHead = styled.p`
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
-  margin-bottom: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #c9d1ff;
+  margin-bottom: 10px;
 `;
 
 const Plain = styled.ul`
@@ -190,100 +228,119 @@ const Plain = styled.ul`
   li {
     font-size: 15px;
     line-height: 1.5;
-    margin-bottom: 6px;
+    color: #b8c0cf;
+    margin-bottom: 8px;
   }
 `;
 
 const P = styled.p`
   font-size: 15px;
-  line-height: 1.55;
-  color: #3a4256;
+  line-height: 1.65;
+  color: #b8c0cf;
 `;
 
 const CV = () => (
   <Page>
     <Container>
-      <Paper>
-        <Header>
-          <div>
-            <Name>Paulina Alejandra Sarquis Muñoz</Name>
-            <Title>IT & Network Support · UX / Front-End</Title>
-            <Meta>San Diego, CA · English, Spanish, French</Meta>
-          </div>
-          <Download href={pdfUrl} target="_blank" rel="noreferrer">
+      <Header>
+        <div>
+          <Eyebrow>Curriculum vitae</Eyebrow>
+          <Name>Paulina Alejandra Sarquis Muñoz</Name>
+          <Title>IT & Network Support · UX / Front-End</Title>
+          <Meta>San Diego, CA · English, Spanish, French</Meta>
+        </div>
+        <Actions>
+          {/* plain anchor: this is the PDF file, not a router page */}
+          <PrimaryAnchor href={pdfUrl} target="_blank" rel="noreferrer">
             Download PDF
-          </Download>
-        </Header>
+          </PrimaryAnchor>
+          <GhostLink to="/casestudy">Read the case study</GhostLink>
+        </Actions>
+      </Header>
 
-        <Columns>
-          <div>
-            <Block>
+      <Columns>
+        <Stack>
+          <Card>
+            <CardHead>
+              <Icon aria-hidden="true"><RiBriefcase4Line /></Icon>
               <H2>Experience</H2>
-              {experience.map((job) => (
-                <Job key={job.role}>
-                  <JobTop>
-                    <Role>{job.role}</Role>
-                    <Dates>{job.dates}</Dates>
-                  </JobTop>
-                  <Org>{job.org}</Org>
-                  <Points>
-                    {job.points.map((pt) => (
-                      <li key={pt}>{pt}</li>
-                    ))}
-                  </Points>
-                </Job>
-              ))}
-            </Block>
+            </CardHead>
+            {experience.map((job, i) => (
+              <Job key={job.role}>
+                <JobTop>
+                  <Role>{job.role}</Role>
+                  <Pill tone={i === 0 ? 'done' : undefined}>{job.dates}</Pill>
+                </JobTop>
+                <Org>{job.org}</Org>
+                <Points>
+                  {job.points.map((pt) => (
+                    <li key={pt}>{pt}</li>
+                  ))}
+                </Points>
+              </Job>
+            ))}
+          </Card>
 
-            <Block>
+          <Card>
+            <CardHead>
+              <Icon aria-hidden="true"><RiMedalLine /></Icon>
               <H2>Education</H2>
-              <JobTop>
-                <Role>B.S. Cognitive Science, Interaction Design</Role>
-                <Dates>Sep 2016 – Dec 2018</Dates>
-              </JobTop>
-              <Org>University of California San Diego</Org>
-              <P>
-                Focused on human-computer interaction, web design, mobile app
-                development, UX design, product design, and usability research.
-              </P>
-            </Block>
-          </div>
+            </CardHead>
+            <JobTop>
+              <Role>B.S. Cognitive Science, Interaction Design</Role>
+              <Pill>Sep 2016 – Dec 2018</Pill>
+            </JobTop>
+            <Org>University of California San Diego</Org>
+            <P>
+              Focused on human-computer interaction, web design, mobile app
+              development, UX design, product design, and usability research.
+            </P>
+          </Card>
+        </Stack>
 
-          <aside>
-            <Block>
+        <Stack>
+          <Card>
+            <CardHead>
+              <Icon aria-hidden="true"><RiToolsLine /></Icon>
               <H2>Skills</H2>
-              {Object.entries(skills).map(([group, list]) => (
-                <div key={group}>
-                  <SubHead>{group}</SubHead>
-                  <Chips>
-                    {list.map((s) => (
-                      <li key={s}>{s}</li>
-                    ))}
-                  </Chips>
-                </div>
-              ))}
-            </Block>
+            </CardHead>
+            {Object.entries(skills).map(([group, list]) => (
+              <div key={group}>
+                <SubHead>{group}</SubHead>
+                <Chips>
+                  {list.map((s) => (
+                    <li key={s}>{s}</li>
+                  ))}
+                </Chips>
+              </div>
+            ))}
+          </Card>
 
-            <Block>
+          <Card>
+            <CardHead>
+              <Icon aria-hidden="true"><RiBook2Line /></Icon>
               <H2>Coursework</H2>
-              <Plain>
-                {coursework.map((c) => (
-                  <li key={c}>{c}</li>
-                ))}
-              </Plain>
-            </Block>
+            </CardHead>
+            <Plain>
+              {coursework.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </Plain>
+          </Card>
 
-            <Block>
+          <Card>
+            <CardHead>
+              <Icon aria-hidden="true"><RiGlobalLine /></Icon>
               <H2>Languages</H2>
-              <Plain>
-                <li>English</li>
-                <li>Spanish</li>
-                <li>French</li>
-              </Plain>
-            </Block>
-          </aside>
-        </Columns>
-      </Paper>
+            </CardHead>
+            <Plain>
+              <li>English</li>
+              <li>Spanish</li>
+              <li>French</li>
+            </Plain>
+          </Card>
+        </Stack>
+      </Columns>
     </Container>
   </Page>
 );
