@@ -26,9 +26,9 @@ const Footer = () => {
                         <FooterLinkTitle>
                             Social Media
                         </FooterLinkTitle>
-                        <FooterLink to='https://www.facebook.com/pausarquis'>Facebook</FooterLink>
-                        <FooterLink to='https://www.instagram.com/sarkispau'>Instagram</FooterLink>
-                        <FooterLink to='https://www.twitter.com/pausers13'>Twitter</FooterLink>
+                        <FooterLink href='https://www.facebook.com/pausarquis' target="_blank" rel="noopener noreferrer">Facebook</FooterLink>
+                        <FooterLink href='https://www.instagram.com/sarkispau' target="_blank" rel="noopener noreferrer">Instagram</FooterLink>
+                        <FooterLink href='https://www.twitter.com/pausers13' target="_blank" rel="noopener noreferrer">Twitter</FooterLink>
                     </FooterLinksItems>
                 </FooterLinksWrapper>
                 <FooterLinksWrapper> 
@@ -36,7 +36,7 @@ const Footer = () => {
                         <FooterLinkTitle>
                             Open Source
                         </FooterLinkTitle>
-                        <FooterLink to='https://www.github.com/psarks'>Github</FooterLink>
+                        <FooterLink href='https://www.github.com/psarks' target="_blank" rel="noopener noreferrer">Github</FooterLink>
                     </FooterLinksItems>
                 </FooterLinksWrapper>
             </FooterLinksContainer>
@@ -48,16 +48,16 @@ const Footer = () => {
                     </SocialLogo>
                     <WebsiteRights>PS © {new Date().getFullYear()} </WebsiteRights>
                     <SocialIcons>
-                        <SocialIconLink href='https://www.facebook.com/pausarquis' target="_blank" aria-label="Facebook">
+                        <SocialIconLink href='https://www.facebook.com/pausarquis' target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                             <FaFacebook/>
                         </SocialIconLink>
-                        <SocialIconLink href='https://www.instagram.com/sarkispau' target="_blank" aria-label="Instagram">
+                        <SocialIconLink href='https://www.instagram.com/sarkispau' target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                             <FaInstagram/>
                         </SocialIconLink>
-                        <SocialIconLink href='https://www.twitter.com/pausers13' target="_blank" aria-label="Twitter">
+                        <SocialIconLink href='https://www.twitter.com/pausers13' target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                             <FaTwitter/>
                         </SocialIconLink>
-                        <SocialIconLink href='https://www.github.com/psarks' target="_blank" aria-label="Github">
+                        <SocialIconLink href='https://www.github.com/psarks' target="_blank" rel="noopener noreferrer" aria-label="Github">
                             <FaGithub/>
                         </SocialIconLink>
                     </SocialIcons>
