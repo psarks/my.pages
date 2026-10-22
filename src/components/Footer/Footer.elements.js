@@ -74,6 +74,7 @@ export const FooterLinkTitle = styled.h2`
 
 `;
 
+// Plain anchor (not router Link): used for external social URLs
 export const FooterLink = styled.a`
     color: #fff;
     text-decoration: none;

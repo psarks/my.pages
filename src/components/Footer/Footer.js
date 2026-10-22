@@ -1,8 +1,19 @@
 import React from 'react'
 import { FaFacebook, FaInstagram, FaTwitter, FaGithub } from 'react-icons/fa'
-import { PrimaryLink } from '../ui'
+import { PrimaryAnchor } from '../ui'
 import { FooterContainer, FooterSubscription, FooterSubHeading, FooterSubText, FooterLinksContainer, FooterLinksWrapper, FooterLinksItems,FooterLinkTitle, FooterLink, SocialMedia, SocialMediaWrap, SocialLogo, SocialIcons, SocialIcon, WebsiteRights, SocialIconLink} from './Footer.elements'
 
+
+// Single source for the social URLs; both the text links and the icon row render from this
+const socials = [
+    { label: 'Facebook', href: 'https://www.facebook.com/pausarquis', Icon: FaFacebook },
+    { label: 'Instagram', href: 'https://www.instagram.com/sarkispau', Icon: FaInstagram },
+    { label: 'Twitter', href: 'https://twitter.com/pausers13', Icon: FaTwitter },
+];
+const github = { label: 'Github', href: 'https://github.com/psarks', Icon: FaGithub };
+
+// "Get in touch" target: opens the visitor's mail app addressed to Paulina
+const CONTACT_HREF = 'mailto:paulinaalesarquis@gmail.com';
 
 const Footer = () => {
     return (
@@ -15,7 +26,8 @@ const Footer = () => {
                 <FooterSubText>
                     Questions, ideas, or just want to say hi?
                 </FooterSubText>
-                <PrimaryLink to='/about'>Get in touch</PrimaryLink>
+                {/* mailto: link, so no target=_blank (it opens the mail app, not a new tab) */}
+                <PrimaryAnchor href={CONTACT_HREF}>Get in touch</PrimaryAnchor>
             </FooterSubscription>
             <FooterLinksContainer>
                 <FooterLinksWrapper>
@@ -23,9 +35,10 @@ const Footer = () => {
                         <FooterLinkTitle>
                             Social Media
                         </FooterLinkTitle>
-                        <FooterLink href='https://www.facebook.com/pausarquis' target="_blank" rel="noopener noreferrer">Facebook</FooterLink>
-                        <FooterLink href='https://www.instagram.com/sarkispau' target="_blank" rel="noopener noreferrer">Instagram</FooterLink>
-                        <FooterLink href='https://www.twitter.com/pausers13' target="_blank" rel="noopener noreferrer">Twitter</FooterLink>
+                        {/* Plain <a> tags: these are external URLs, so they must not go through the router; rel blocks window.opener access */}
+                        {socials.map(({ label, href }) => (
+                            <FooterLink key={label} href={href} target="_blank" rel="noopener noreferrer">{label}</FooterLink>
+                        ))}
                     </FooterLinksItems>
                 </FooterLinksWrapper>
                 <FooterLinksWrapper> 
@@ -33,7 +46,7 @@ const Footer = () => {
                         <FooterLinkTitle>
                             Open Source
                         </FooterLinkTitle>
-                        <FooterLink href='https://www.github.com/psarks' target="_blank" rel="noopener noreferrer">Github</FooterLink>
+                        <FooterLink href={github.href} target="_blank" rel="noopener noreferrer">{github.label}</FooterLink>
                     </FooterLinksItems>
                 </FooterLinksWrapper>
             </FooterLinksContainer>
@@ -45,18 +58,12 @@ const Footer = () => {
                     </SocialLogo>
                     <WebsiteRights>PS © {new Date().getFullYear()} </WebsiteRights>
                     <SocialIcons>
-                        <SocialIconLink href='https://www.facebook.com/pausarquis' target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                            <FaFacebook/>
-                        </SocialIconLink>
-                        <SocialIconLink href='https://www.instagram.com/sarkispau' target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                            <FaInstagram/>
-                        </SocialIconLink>
-                        <SocialIconLink href='https://www.twitter.com/pausers13' target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                            <FaTwitter/>
-                        </SocialIconLink>
-                        <SocialIconLink href='https://www.github.com/psarks' target="_blank" rel="noopener noreferrer" aria-label="Github">
-                            <FaGithub/>
-                        </SocialIconLink>
+                        {/* Icon row: same list as above, with rel added alongside target=_blank */}
+                        {[...socials, github].map(({ label, href, Icon }) => (
+                            <SocialIconLink key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
+                                <Icon/>
+                            </SocialIconLink>
+                        ))}
                     </SocialIcons>
                 </SocialMediaWrap>
             </SocialMedia>

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
 // Shared look taken from the Bucketlist page: dark cards, pill badges, eyebrow labels.
@@ -24,7 +24,8 @@ export const Pill = styled.span`
     tone === 'done' ? '#4ade80' : tone === 'wip' ? '#fbbf24' : 'rgba(75, 89, 247, 0.18)'};
 `;
 
-const buttonStyles = `
+// css`` (not a plain string) so the nested &:hover / &:focus-visible rules are processed
+const buttonStyles = css`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -46,7 +47,7 @@ const buttonStyles = `
   }
 `;
 
-export const PrimaryLink = styled(Link)`
+const primaryStyles = css`
   ${buttonStyles}
   color: #fff;
   background: #4b59f7;
@@ -55,6 +56,15 @@ export const PrimaryLink = styled(Link)`
     background: #0467fb;
     border-color: #0467fb;
   }
+`;
+
+export const PrimaryLink = styled(Link)`
+  ${primaryStyles}
+`;
+
+// Same look for external URLs (router Link can't open those)
+export const PrimaryAnchor = styled.a`
+  ${primaryStyles}
 `;
 
 export const GhostLink = styled(Link)`

@@ -65,11 +65,15 @@ export const NavMenu = styled.ul`
         display: flex;
         flex-direction: column;
         width: 100%;
-        height: 90vh;
+        /* fill the space under the 80px bar; dvh tracks the mobile URL bar, vh is the fallback */
+        height: calc(100vh - 80px);
+        height: calc(100dvh - 80px);
         position: absolute;
         top: 80px;
         /*if clicked I want it to show = 0 if not clicked keep hidden = -100*/
+        /* $open is a transient prop so it is not forwarded to the DOM */
         left: ${({ $open }) => ($open ? 0 : '-100%')};
+        /* lets the open menu scroll on short phones so "View CV" is not clipped */
         overflow-y: auto;
         opacity: 1;
         transition: all 0.5s ease;

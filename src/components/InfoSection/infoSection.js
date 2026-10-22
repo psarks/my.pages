@@ -20,6 +20,7 @@ const InfoSection = ({lightBg, imgStart, lightTopLine, lightTextDesc, descriptio
                         <TopLine lightTopLine={lightTopLine}>{topLine}</TopLine>
                         <Heading lightText={lightText}>{headline}</Heading>
                         <Subtitle lightTextDesc={lightTextDesc}>{description}</Subtitle>
+                        {/* optional slot under the intro text, used by Home for the action buttons */}
                         {children}
                       </TextWrapper> 
                     </InfoColumn>
