@@ -119,18 +119,25 @@ export const caseStudy = {
 // Second case study: the Prospector agents (route: /casestudy/prospector)
 export const prospectorStudy = {
     title: 'Prospector FC: a team of AI agents that finds my clients',
-    lede: 'I am starting a business that makes AI-made Meta ads for local businesses. Finding the right businesses by hand was slow, so I learned Python and built a small team of agents that does most of the scouting for me. The stadium below replays a real run.',
+    lede: 'I am starting a business that makes AI-made Meta ads for local businesses. Finding the right businesses by hand was slow, so I learned Python and built a small team of agents that does most of the scouting for me. The stadium below replays a real run, and the Training Ground shows the AI studio that turns each lead into a ready-to-pitch kit.',
     facts: [
         { label: 'Role', value: 'Designer & developer' },
         { label: 'Built', value: 'November 2026' },
-        { label: 'Stack', value: 'Python, Google Places API, Three.js' },
+        { label: 'Stack', value: 'Python, Claude API, Google Places API, Three.js' },
         { label: 'Latest run', value: '47 strict leads from 76 checked businesses' },
     ],
-    embed: {
-        file: 'stadium.html',
-        title: 'Prospector Stadium: a 3D replay of the agents at work',
-        caption: 'Press "Watch the replay" to see each agent do its job. Counts and business types only; names stay private.',
-    },
+    embeds: [
+        {
+            file: 'stadium.html',
+            title: 'Prospector Stadium: a 3D replay of the agents at work',
+            caption: 'Press "Watch the replay" to see each agent do its job. Counts and business types only; names stay private.',
+        },
+        {
+            file: 'training_ground.html',
+            title: 'The Training Ground: five AI specialists build a pitch kit',
+            caption: 'Press "Start the session" to send a lead through the studio. The ads come from a real run; names and addresses are removed.',
+        },
+    ],
     sections: [
         {
             heading: 'The challenge',
@@ -144,6 +151,7 @@ export const prospectorStudy = {
                 'Three coaches with different rules pick the leads and write a personal pitch for each, in Spanish for Tijuana.',
                 'A manager runs everything with one command, with a search limit and a backlog brake so work never piles up.',
                 'A secretary emails me a summary, and a match report feeds the stadium on this page.',
+                'Off the pitch, a Training Ground of AI specialists (strategist, copywriter, art director, web designer) built on the Claude API turns each lead into a pitch kit, with a studio manager running them in order.',
             ],
         },
         {

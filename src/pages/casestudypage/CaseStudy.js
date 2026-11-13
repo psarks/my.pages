@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
   RiErrorWarningLine,
@@ -178,17 +178,22 @@ const Demo = styled.figure`
   }
 `;
 
-// The embedded page reports its own height, so the frame never needs a scrollbar
+// The embedded page reports its own height, so the frame never needs a scrollbar.
+// With TWO embeds on one page, each frame only listens to ITS OWN page
+// (e.source === ref.current.contentWindow), so their heights never get mixed up.
 const LiveEmbed = ({ src, title }) => {
+  const ref = useRef(null);
   const [height, setHeight] = useState(900);
   useEffect(() => {
     const onMessage = (e) => {
-      if (e.data && typeof e.data.stadiumHeight === 'number') setHeight(Math.ceil(e.data.stadiumHeight));
+      if (!ref.current || e.source !== ref.current.contentWindow) return;   // not my page: ignore
+      const h = e.data && (typeof e.data.embedHeight === 'number' ? e.data.embedHeight : e.data.stadiumHeight);  // new name, or the stadium's name
+      if (typeof h === 'number') setHeight(Math.ceil(h));
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
   }, []);
-  return <iframe src={src} title={title} style={{ height }} loading="lazy" />;
+  return <iframe ref={ref} src={src} title={title} style={{ height }} loading="lazy" />;
 };
 
 const Actions = styled.div`
@@ -219,17 +224,18 @@ const CaseStudy = ({ study = caseStudy }) => {
           ))}
         </Facts>
 
-        {c.embed && (
-          <Demo>
-            <LiveEmbed src={`${process.env.PUBLIC_URL}/${c.embed.file}?embed=1`} title={c.embed.title} />
+        {/* A study can have one "embed" or a list of "embeds" (Prospector has the stadium AND the Training Ground) */}
+        {(c.embeds || (c.embed ? [c.embed] : [])).map((em) => (
+          <Demo key={em.file}>
+            <LiveEmbed src={`${process.env.PUBLIC_URL}/${em.file}?embed=1`} title={em.title} />
             <figcaption>
-              <span>{c.embed.caption}</span>
-              <PrimaryAnchor href={`${process.env.PUBLIC_URL}/${c.embed.file}`} target="_blank" rel="noreferrer">
+              <span>{em.caption}</span>
+              <PrimaryAnchor href={`${process.env.PUBLIC_URL}/${em.file}`} target="_blank" rel="noreferrer">
                 Open full screen
               </PrimaryAnchor>
             </figcaption>
           </Demo>
-        )}
+        ))}
 
         <Grid>
           {c.sections.map((s, i) => {
