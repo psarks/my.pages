@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
+/* Anything marked hidden stays hidden, even if another rule gives it a display (this caused the stuck GOAL! and WebGL note) */
+[hidden] { display: none !important; }
 /* Layout: broadcast match centre. Scoreboard bar, then the pitch (the agents' world) beside live commentary, then squad and stats. */
 :root {
   --bg: #F1F4F0;
@@ -202,6 +204,7 @@ footer { font-size: 13px; color: var(--muted); max-width: 75ch; }
   position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center;
   color: #fff; font-size: 15px;
 }
+.fallback[hidden] { display: none; }   /* display:grid above would otherwise beat the hidden attribute */
 @media (max-width: 520px) { .hud { transform: scale(.82); transform-origin: top left; } }
 
 /* Embed mode (inside the portfolio case study): show only the match, in the dark theme */
