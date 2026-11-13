@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   RiErrorWarningLine,
@@ -8,7 +8,7 @@ import {
   RiCheckboxCircleLine,
 } from 'react-icons/ri';
 import { Container } from '../../globalStyles';
-import { Eyebrow, Pill, PrimaryLink, GhostLink } from '../../components/ui';
+import { Eyebrow, Pill, PrimaryLink, PrimaryAnchor, GhostLink } from '../../components/ui';
 import { caseStudy } from './Data';
 
 // One icon per section, in the same order as caseStudy.sections in Data.js
@@ -152,6 +152,45 @@ const List = styled.ul`
   }
 `;
 
+// Live demo frame (used by case studies that have an "embed", like Prospector)
+const Demo = styled.figure`
+  margin: 0 0 56px;
+  background: #0b1630;
+  border: 1px solid #2c3554;
+  border-radius: 14px;
+  overflow: hidden;
+  iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+    background: #0b1630;
+  }
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 22px;
+    border-top: 1px solid #2c3554;
+    font-size: 15px;
+    color: #b8c0cf;
+  }
+`;
+
+// The embedded page reports its own height, so the frame never needs a scrollbar
+const LiveEmbed = ({ src, title }) => {
+  const [height, setHeight] = useState(900);
+  useEffect(() => {
+    const onMessage = (e) => {
+      if (e.data && typeof e.data.stadiumHeight === 'number') setHeight(Math.ceil(e.data.stadiumHeight));
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
+  return <iframe src={src} title={title} style={{ height }} loading="lazy" />;
+};
+
 const Actions = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -159,8 +198,9 @@ const Actions = styled.div`
   margin-top: 56px;
 `;
 
-const CaseStudy = () => {
-  const c = caseStudy;
+// One page design for every case study: pass a different "study" from Data.js
+const CaseStudy = ({ study = caseStudy }) => {
+  const c = study;
   return (
     <Section>
       <Container>
@@ -178,6 +218,18 @@ const CaseStudy = () => {
             </Fact>
           ))}
         </Facts>
+
+        {c.embed && (
+          <Demo>
+            <LiveEmbed src={`${process.env.PUBLIC_URL}/${c.embed.file}?embed=1`} title={c.embed.title} />
+            <figcaption>
+              <span>{c.embed.caption}</span>
+              <PrimaryAnchor href={`${process.env.PUBLIC_URL}/${c.embed.file}`} target="_blank" rel="noreferrer">
+                Open full screen
+              </PrimaryAnchor>
+            </figcaption>
+          </Demo>
+        )}
 
         <Grid>
           {c.sections.map((s, i) => {
@@ -205,7 +257,7 @@ const CaseStudy = () => {
 
         <Actions>
           <PrimaryLink to="/cv">View CV</PrimaryLink>
-          <GhostLink to="/projects">← Back to projects</GhostLink>
+          <GhostLink to="/casestudies">← All case studies</GhostLink>
         </Actions>
       </Container>
     </Section>

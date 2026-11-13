@@ -115,3 +115,63 @@ export const caseStudy = {
         },
     ],
 };
+
+// Second case study: the Prospector agents (route: /casestudy/prospector)
+export const prospectorStudy = {
+    title: 'Prospector FC: a team of AI agents that finds my clients',
+    lede: 'I am starting a business that makes AI-made Meta ads for local businesses. Finding the right businesses by hand was slow, so I learned Python and built a small team of agents that does most of the scouting for me. The stadium below replays a real run.',
+    facts: [
+        { label: 'Role', value: 'Designer & developer' },
+        { label: 'Built', value: 'November 2026' },
+        { label: 'Stack', value: 'Python, Google Places API, Three.js' },
+        { label: 'Latest run', value: '47 strict leads from 76 checked businesses' },
+    ],
+    embed: {
+        file: 'stadium.html',
+        title: 'Prospector Stadium: a 3D replay of the agents at work',
+        caption: 'Press "Watch the replay" to see each agent do its job. Counts and business types only; names stay private.',
+    },
+    sections: [
+        {
+            heading: 'The challenge',
+            text: 'The businesses that need me most have great reviews but run few or no Meta ads. Finding them meant searching maps, checking each business in the Meta Ad Library, and keeping notes by hand, for hours.',
+        },
+        {
+            heading: 'My approach',
+            points: [
+                'A scout searches Google Places and keeps one logbook, with no duplicates (same name at a different address is a different store).',
+                'An ad checker opens the Meta Ad Library one tab at a time and I type the count. Meta does not allow bots, so this step stays human.',
+                'Three coaches with different rules pick the leads and write a personal pitch for each, in Spanish for Tijuana.',
+                'A manager runs everything with one command, with a search limit and a backlog brake so work never piles up.',
+                'A secretary emails me a summary, and a match report feeds the stadium on this page.',
+            ],
+        },
+        {
+            heading: 'Built with care',
+            text: 'API keys and passwords live in Windows environment variables, never in the code. Business names never leave my computer: the public match report holds only counts and business types.',
+        },
+        {
+            heading: 'What I took from it',
+            text: 'I learned Python by building something I actually use: classes, CSV files, APIs, JSON, and reading error messages to fix my own bugs. Treating each agent as a player with one job made a complicated system easy to build and easy to explain.',
+        },
+    ],
+};
+
+// The Case Studies page (route: /casestudies): one horizontal band per study, newest FIRST.
+// accent = the band's stripe color. study = the full study object (title and facts come from it).
+export const caseStudies = [
+    {
+        to: '/casestudy/prospector',
+        tag: 'AI agents & data',
+        accent: '#F5C518',   // stadium yellow
+        study: prospectorStudy,
+        summary: 'A Python team of agents that finds local businesses with great reviews and few Meta ads, with a 3D stadium that replays each run.',
+    },
+    {
+        to: '/casestudy',
+        tag: 'IT support',
+        accent: '#4b59f7',   // site blue
+        study: caseStudy,
+        summary: 'How I support the network, devices, and classroom AV at DePortola Middle School, and train staff so problems do not come back.',
+    },
+];

@@ -102,6 +102,14 @@ export const projects = [
         inProgress: true,
     },
     {
+        tag: 'AI Agents Case Study',
+        title: 'Prospector FC: AI agents that find my clients',
+        summary: 'A Python team of agents (scout, ad checker, three coaches, manager, secretary) that finds local businesses with great reviews and few Meta ads, with a 3D stadium that replays each run.',
+        skills: ['Python', 'APIs', 'Automation', 'JSON', 'Three.js'],
+        internalLink: '/casestudy/prospector',
+        inProgress: false,
+    },
+    {
         tag: 'IT Case Study',
         title: 'Keeping a middle school connected',
         summary: 'How I support the network, devices, and classroom AV at DePortola Middle School: triaging requests, isolating hardware vs. software vs. connection issues, and training staff so problems do not come back.',

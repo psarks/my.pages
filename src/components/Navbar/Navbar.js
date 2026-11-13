@@ -8,7 +8,7 @@ const links = [
     { to: '/about', label: 'About' },
     { to: '/photography', label: 'Photography' },
     { to: '/projects', label: 'Projects' },
-    { to: '/casestudy', label: 'Case Study' },
+    { to: '/casestudies', label: 'Case Studies' },
     { to: '/bucketlist', label: 'Bucket List' },
 ];
 

@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-11",
+  "search": {
+    "business_type": "car wash",
+    "city": "San Diego",
+    "searches_used": 1,
+    "max_searches": 1
+  },
+  "backlog_start": 1,
+  "backlog_limit": 15,
+  "logbook_before": 90,
+  "new": 0,
+  "ad_check": {
+    "worth_checking": 0,
+    "counted": 0,
+    "skipped": 0
+  },
+  "checked": 76,
+  "checked_by_type": {
+    "car wash": 26,
+    "coffee shops": 20,
+    "ice cream shops": 10,
+    "nail salon": 20
+  },
+  "strict": {
+    "car wash": 16,
+    "coffee shops": 15,
+    "ice cream shops": 6,
+    "nail salon": 10
+  },
+  "loose": {
+    "car wash": 24,
+    "coffee shops": 20,
+    "ice cream shops": 8,
+    "nail salon": 18
+  },
+  "hunter": {
+    "car wash": 2,
+    "coffee shops": 2,
+    "nail salon": 2
+  },
+  "to_do": 14,
+  "backlog_end": 1,
+  "email_sent": true,
+  "goals": {
+    "clients": 0,
+    "ads": 0,
+    "websites": 0
+  }
+}

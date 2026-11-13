@@ -8,6 +8,8 @@ import Photography from "./pages/photographypage/Photography";
 import Projects from "./pages/projectspage/Projects";
 import Cv from "./pages/cvpage/CV";
 import CaseStudy from "./pages/casestudypage/CaseStudy";
+import CaseStudies from "./pages/casestudypage/CaseStudies";
+import { prospectorStudy } from "./pages/casestudypage/Data";
 import Bucketlist from "./pages/bucketlistpage/Bucketlist";
 import { Navbar, Footer } from "./components";
 import ScrollToTop from "./components/ScrollToTop";
@@ -24,6 +26,8 @@ function App() {
         <Route path="/photography" component={Photography} />
         <Route path="/projects" component={Projects} />
         <Route path="/cv" component={Cv} />
+        <Route path="/casestudies" component={CaseStudies} />
+        <Route path="/casestudy/prospector" render={() => <CaseStudy study={prospectorStudy} />} />
         <Route path="/casestudy" component={CaseStudy} />
         <Route path="/bucketlist" component={Bucketlist} />
       </Switch>
