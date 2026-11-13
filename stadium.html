@@ -1,0 +1,1123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prospector Stadium</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: broadcast match centre. Scoreboard bar, then the pitch (the agents' world) beside live commentary, then squad and stats. */
+:root {
+  --bg: #F1F4F0;
+  --surface: #FFFFFF;
+  --ink: #13201A;
+  --muted: #56665D;
+  --line: #D3DCD5;
+  --turf-a: #2F7B48;
+  --turf-b: #2A7042;
+  --chalk: rgba(255,255,255,.85);
+  --kit: #15306F;
+  --kit-ink: #FFFFFF;
+  --armband: #F5C518;
+  --board: #0E1A33;
+  --car: #2F7FE0;
+  --coffee: #A86A35;
+  --ice: #E0559E;
+  --nail: #8A63E0;
+  --font-display: "Saira Condensed", "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1310; --surface: #151F1A; --ink: #E3EBE5; --muted: #93A399; --line: #2A3830;
+    --turf-a: #215E38; --turf-b: #1C5331; --chalk: rgba(255,255,255,.72);
+    --kit: #3B62C8; --board: #0A1222; --coffee: #C4864F;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1310; --surface: #151F1A; --ink: #E3EBE5; --muted: #93A399; --line: #2A3830;
+  --turf-a: #215E38; --turf-b: #1C5331; --chalk: rgba(255,255,255,.72);
+  --kit: #3B62C8; --board: #0A1222; --coffee: #C4864F;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 22px; }
+.wrap > * { min-width: 0; }
+.card { align-content: start; }
+.card code { overflow-wrap: anywhere; }
+
+/* Scoreboard */
+.scoreboard {
+  background: var(--board); color: #fff; border-radius: 12px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px;
+  padding: 14px 20px;
+}
+.club { display: flex; flex-direction: column; min-width: 0; }
+.club h1 {
+  font-family: var(--font-display); font-weight: 800; font-size: 30px; line-height: 1;
+  letter-spacing: .04em; text-transform: uppercase; margin: 0; text-wrap: balance;
+}
+.club span { font-family: var(--font-mono); font-size: 12px; color: rgba(255,255,255,.65); }
+.clock {
+  display: flex; align-items: baseline; gap: 10px;
+  font-family: var(--font-display); font-weight: 700;
+}
+.clock b { font-size: 34px; color: var(--armband); font-variant-numeric: tabular-nums; min-width: 2.4ch; text-align: right; }
+.clock em { font-style: normal; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.8); }
+.scores { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+.score {
+  display: flex; align-items: baseline; gap: 8px; padding: 6px 12px;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 8px;
+  font-family: var(--font-display); text-transform: uppercase; letter-spacing: .08em;
+}
+.score small { font-size: 13px; color: rgba(255,255,255,.7); font-weight: 500; }
+.score b { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.score.goal { border-color: var(--armband); }
+.score.goal b { color: var(--armband); }
+.goal-split { font: 500 12px var(--font-mono); letter-spacing: 0; text-transform: none; color: rgba(255,255,255,.7); }
+
+/* Match area */
+.match { display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 860px) { .match { grid-template-columns: 1fr; } }
+.pitch-box { min-width: 0; display: grid; gap: 10px; }
+svg.pitch { width: 100%; height: auto; display: block; border-radius: 12px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button {
+  font: 600 14px var(--font-body); border-radius: 8px; padding: 8px 14px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+}
+button.primary { background: var(--kit); color: var(--kit-ink); border-color: var(--kit); }
+button:focus-visible { outline: 3px solid var(--armband); outline-offset: 2px; }
+button[aria-pressed="true"] { border-color: var(--ink); }
+.controls .note { font-size: 13px; color: var(--muted); margin-left: auto; }
+
+.feed {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 18px; min-width: 0; display: grid; gap: 10px;
+}
+.eyebrow {
+  font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+  letter-spacing: .14em; font-size: 14px; color: var(--muted); margin: 0;
+}
+.onball { display: block; margin-top: 4px; color: var(--ink); letter-spacing: .08em; }
+.onball b { font-weight: 800; }
+.feed ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.feed li { display: grid; grid-template-columns: 3.2ch 1fr; gap: 10px; font-size: 14px; }
+.feed li .min { font-family: var(--font-mono); font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
+.feed li.now .min { color: var(--ink); }
+.feed li.now p { font-weight: 500; }
+.feed li p { margin: 0; min-width: 0; }
+.feed li.human p::after {
+  content: "you"; margin-left: 6px; padding: 1px 6px; border-radius: 99px;
+  background: var(--armband); color: #1b1600; font: 600 11px var(--font-mono); vertical-align: 1px;
+}
+.feed .empty { color: var(--muted); font-size: 14px; }
+
+/* Squad + stats */
+section h2 {
+  font-family: var(--font-display); font-weight: 800; font-size: 26px; text-transform: uppercase;
+  letter-spacing: .05em; margin: 0 0 4px; text-wrap: balance;
+}
+section > p.lead { margin: 0 0 14px; color: var(--muted); max-width: 65ch; }
+.squad { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px; display: grid; grid-template-columns: 44px 1fr; gap: 4px 12px; align-items: start;
+}
+.card .disc {
+  grid-row: span 3; width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; font: 800 14px var(--font-display); letter-spacing: .04em;
+  background: var(--kit); color: var(--kit-ink);
+}
+.card .disc.coach { background: var(--surface); color: var(--kit); border: 2px solid var(--kit); }
+.card .disc.you { background: var(--armband); color: #1b1600; }
+.card h3 { margin: 0; font-size: 15px; }
+.card code { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.card p { margin: 0; font-size: 14px; color: var(--muted); }
+
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 14px; }
+th, td { padding: 10px 14px; text-align: right; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+thead th { font: 700 13px var(--font-display); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+tfoot td { font-weight: 600; border-top: 2px solid var(--line); border-bottom: 0; }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: 0; }
+
+footer { font-size: 13px; color: var(--muted); max-width: 75ch; }
+
+/* How to read the pitch */
+.legend { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 10px; }
+.legend dl { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px 20px; }
+.legend dt { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 4px; }
+.legend dd { margin: 2px 0 0; font-size: 13.5px; color: var(--muted); }
+.legend dd b { color: var(--ink); font-weight: 600; }
+.legend .sw { margin-right: 0; }
+
+/* 3D stage */
+.stage {
+  position: relative; width: 100%; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden;
+  background: #0B1630;
+}
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hud {
+  position: absolute; left: 12px; top: 12px; z-index: 2;
+  background: rgba(5,10,20,.78); color: #fff; border: 1px solid rgba(255,255,255,.14);
+  border-radius: 8px; padding: 8px 12px; display: grid; gap: 6px; min-width: 190px;
+  font: 500 12px var(--font-mono); letter-spacing: .06em;
+}
+.hud .row { display: flex; justify-content: space-between; gap: 12px; }
+.hud .bar { height: 8px; background: rgba(255,255,255,.18); border-radius: 4px; overflow: hidden; }
+.hud .bar i { display: block; height: 100%; width: 0; background: #F5C518; transition: width .6s ease; }
+.tag3d {
+  position: absolute; z-index: 2; transform: translate(-50%, -100%); pointer-events: none;
+  background: #fff; color: #13201A; padding: 5px 10px; border-radius: 8px; white-space: nowrap;
+  font: 500 13px var(--font-body); box-shadow: 0 4px 14px rgba(0,0,0,.35);
+}
+.tag3d.you { background: #F5C518; color: #1b1600; font: 800 13px var(--font-display); letter-spacing: .08em; border-radius: 99px; padding: 3px 10px; }
+.goal-banner {
+  position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; pointer-events: none;
+  font: 800 clamp(56px, 13vw, 132px) var(--font-display); letter-spacing: .06em; color: #F5C518;
+  text-shadow: 0 5px 0 #15306F, 0 0 40px rgba(0,0,0,.55);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .goal-banner:not([hidden]) { animation: goalpop .7s cubic-bezier(.2,1.6,.4,1) both, goalpulse .5s ease-in-out .7s 5 alternate; }
+}
+@keyframes goalpop { from { transform: scale(.3) rotate(-8deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes goalpulse { to { transform: scale(1.06); } }
+.fallback {
+  position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center;
+  color: #fff; font-size: 15px;
+}
+@media (max-width: 520px) { .hud { transform: scale(.82); transform-origin: top left; } }
+
+/* Embed mode (inside the portfolio case study): show only the match, in the dark theme */
+.embed section, .embed footer { display: none; }
+body { margin: 0; }
+</style>
+
+<div class="wrap">
+  <header class="scoreboard" aria-label="Scoreboard">
+    <div class="club">
+      <h1>Prospector FC</h1>
+      <span id="matchdate">Matchday replay</span>
+    </div>
+    <div class="clock" aria-live="polite"><b id="clock">90'</b><em id="status">Full time</em></div>
+    <div class="scores">
+      <div class="score" title="Leads signed by the strict coach: 4.5+ stars and zero ads"><small>Strict leads</small><b id="s-strict">0</b></div>
+      <div class="score" title="Leads signed by the loose coach: 4.0+ stars and fewer than 3 ads"><small>Loose leads</small><b id="s-loose">0</b></div>
+      <div class="score" title="Leads signed by the website hunter: no website or an outdated one"><small>Hunter leads</small><b id="s-hunter">0</b></div>
+      <div class="score goal" id="goal-chip" title="Clients won: a business that got an ad and/or a website from me"><small>Goals</small><b id="s-goal">0</b><span class="goal-split" id="goal-split">0 ads · 0 sites</span></div>
+    </div>
+  </header>
+
+  <div class="match">
+    <div class="pitch-box">
+      <div class="stage" id="stage">
+        <canvas id="c" role="img" aria-label="3D stadium where the Prospector agents work: the scout, ad checker, three coaches, manager and email secretary, with the logbook on the big screen."></canvas>
+        <div class="hud" aria-label="Backlog"><div class="row"><span>BACKLOG</span><span id="backtxt">0 / 15</span></div><div class="bar"><i id="backfill"></i></div></div>
+        <div class="tag3d" id="callout" hidden></div>
+        <div class="tag3d you" id="you" hidden>YOU</div>
+        <div class="goal-banner" id="goalBanner" hidden>GOAL!</div>
+        <div class="fallback" id="fallback" hidden>The 3D stadium needs WebGL, which this browser has turned off. The commentary and team sheet still show the full match.</div>
+      </div>
+      <div class="controls">
+        <button class="primary" id="btn-play" type="button">Watch the replay</button>
+        <button id="btn-skip" type="button">Skip to full time</button>
+        <button id="btn-goal" type="button">Preview a goal</button>
+        <button id="btn-speed" type="button" aria-pressed="false">Speed 1×</button>
+        <span class="note">Counts and business types only. Names stay private.</span>
+      </div>
+      <div class="legend" aria-label="How to read the pitch">
+        <p class="eyebrow">How to read the pitch</p>
+        <dl>
+          <div><dt>⚽ The ball</dt><dd>Whoever has it is the agent working right now.</dd></div>
+          <div><dt><span class="sw" style="background:var(--car)"></span><span class="sw" style="background:var(--coffee)"></span><span class="sw" style="background:var(--ice)"></span><span class="sw" style="background:var(--nail)"></span>Flying dots</dt><dd>Businesses, colored by type: car wash, coffee shop, ice cream, nail salon.</dd></div>
+          <div><dt>Numbers by the coaches</dt><dd>Leads each coach signed from the same checked businesses. <b>Strict:</b> 4.5+ stars, zero ads. <b>Loose:</b> 4.0+ stars, fewer than 3 ads. <b>Hunter:</b> no website or an outdated one. The lists overlap, so they don't add up.</dd></div>
+          <div><dt>Big screen</dt><dd>The logbook: every business the scout has found so far.</dd></div>
+          <div><dt>Ad board</dt><dd>The Meta Ad Library, where I count each business's ads by hand.</dd></div>
+          <div><dt>Goals</dt><dd>A business that became a client: I made their ad or website.</dd></div>
+        </dl>
+      </div>
+    </div>
+    <aside class="feed" aria-label="Live commentary">
+      <p class="eyebrow">Live commentary<span class="onball">⚽ On the ball: <b id="onball">Secretary</b></span></p>
+      <ol id="feed"></ol>
+    </aside>
+  </div>
+
+  <section>
+    <h2>The squad</h2>
+    <p class="lead">Each agent is a small Python file with one job. The manager runs them in order with one command, and the coaches all read the same logbook.</p>
+    <div class="squad">
+      <div class="card"><div class="disc">MGR</div><h3>Manager</h3><code>run_all.py</code><p>Checks the backlog brake, then decides: scout something new or work the pile.</p></div>
+      <div class="card"><div class="disc">SCT</div><h3>Scout</h3><code>researcher_agent.py</code><p>Searches Google Places and adds new businesses to the logbook. Skips any it has seen before.</p></div>
+      <div class="card"><div class="disc you">CHK</div><h3>Ad checker</h3><code>ad_checker.py</code><p>Opens the Meta Ad Library and asks me for the count. Meta doesn't allow bots, so a person does this step.</p></div>
+      <div class="card"><div class="disc coach">STR</div><h3>Strict coach</h3><code>prospector_agent.py</code><p>Signs businesses rated 4.5 or higher that run zero ads.</p></div>
+      <div class="card"><div class="disc coach">LSE</div><h3>Loose coach</h3><code>prospector_agent.py</code><p>Signs businesses rated 4.0 or higher with fewer than 3 ads.</p></div>
+      <div class="card"><div class="disc coach">HNT</div><h3>Website hunter</h3><code>prospector_agent.py</code><p>Signs the ones with no website or an outdated one.</p></div>
+      <div class="card"><div class="disc">SEC</div><h3>Secretary</h3><code>notify.py</code><p>Emails me the match summary when the run ends.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Team sheet by business type</h2>
+    <p class="lead">How many checked businesses each coach signed, grouped by type.</p>
+    <div class="table-wrap"><table id="stats"></table></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+
+// ---- Embed mode: the portfolio shows this page inside its case study ----
+if (new URLSearchParams(location.search).has("embed")) {
+  document.documentElement.classList.add("embed");
+  document.documentElement.setAttribute("data-theme", "dark");
+  const tell = () => parent.postMessage({ stadiumHeight: document.documentElement.scrollHeight }, "*");
+  new ResizeObserver(tell).observe(document.body);
+  addEventListener("load", tell);
+}
+// ------------------------------------------------------------------
+// MATCH REPORT. In the portfolio, the agents write match_report.json
+// after each run and this page reads it. This copy is the run of
+// Nov 11, 2026 and is used when that file isn't there.
+// ------------------------------------------------------------------
+let REPORT = {
+  date: "2026-11-11",
+  search: { business_type: "car wash", city: "San Diego", searches_used: 1, max_searches: 1 },
+  backlog_start: 1, backlog_limit: 15,
+  logbook_before: 89, new: 1,
+  ad_check: { worth_checking: 1, counted: 1, skipped: 0 },
+  checked: 76,
+  checked_by_type: { "car wash": 26, "coffee shops": 20, "ice cream shops": 10, "nail salon": 20 },
+  strict: { "car wash": 16, "coffee shops": 15, "ice cream shops": 6, "nail salon": 10 },
+  loose:  { "car wash": 24, "coffee shops": 20, "ice cream shops": 8, "nail salon": 18 },
+  hunter: { "car wash": 2, "coffee shops": 2, "nail salon": 2 },
+  to_do: 14, backlog_end: 1, email_sent: true,
+  // GOALS = clients won (status "client" in the logbook). A client can get an ad, a website, or both.
+  goals: { clients: 0, ads: 0, websites: 0 }
+};
+
+const TYPE_HEX = { "car wash": 0x2F7FE0, "coffee shops": 0xB0723A, "ice cream shops": 0xE0559E, "nail salon": 0x8A63E0 };
+const TYPE_CSS = { "car wash": "var(--car)", "coffee shops": "var(--coffee)", "ice cream shops": "var(--ice)", "nail salon": "var(--nail)" };
+const sum = o => Object.values(o || {}).reduce((a, b) => a + b, 0);
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = id => document.getElementById(id);
+
+let speed = 1;
+const T = ms => (reduceMotion ? 0 : ms / speed);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const wait = ms => sleep(T(ms));
+const ease = p => p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+
+// ------------------------------------------------------------------
+// TWEENS: small timed animations, all advanced by the one render loop
+// ------------------------------------------------------------------
+let tweens = [];
+function tween(ms, fn) {
+  const dur = T(ms);
+  if (!dur) { fn(1); return Promise.resolve(); }
+  return new Promise(res => tweens.push({ t0: performance.now(), dur, fn, res }));
+}
+function killTweens() { tweens.forEach(t => t.res()); tweens = []; }
+function count(from, to, ms, cb) { return tween(ms, p => cb(Math.round(from + (to - from) * p))); }
+
+// ------------------------------------------------------------------
+// THE WORLD (Three.js). Units are metres. x runs goal to goal
+// (-52.5 to 52.5), z runs from the far touchline (-34) to the near one (34).
+// Every model is low-poly and flat-shaded, in the club's palette.
+// ------------------------------------------------------------------
+let renderer, scene, camera, GL = false;
+const KIT = 0x15306F, YELLOW = 0xF5C518, WHITE = 0xF4F6FA, DARK = 0x14161C;
+const P = {
+  mgr: [0, 37.5], sct: [-19, 4], sctGoal: [-43, 2], chk: [0, -12], chkBoard: [0, -31],
+  strict: [19, -15], loose: [27, 1], hunter: [19, 17], sec: [36, 24], secInbox: [46, 33]
+};
+let W = {};             // world anchors (filled in once THREE is ready)
+const A = {};           // the agents
+let ball, ballState = { mode: "held" }, ballOwner = "mgr", ballBusyUntil = 0;
+let jumbo, board, goalBacks = [], crowd, confetti, mailFlag, envelope;
+let camFocus = null, camOverride = null;
+const camState = { x: 0, z: 0, fov: 46 };
+let waveOn = false, confettiOn = false, celebrating = false;
+const dots = new Set();
+const mats = {};
+const M = (hex, opts = {}) => {
+  const k = hex + JSON.stringify(opts);
+  return mats[k] || (mats[k] = new THREE.MeshStandardMaterial({ color: hex, flatShading: true, roughness: .85, metalness: 0, ...opts }));
+};
+function box(w, h, d, hex, parent, x = 0, y = 0, z = 0) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), M(hex));
+  m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true;
+  if (parent) parent.add(m);
+  return m;
+}
+function canvasTex(w, h, draw) {
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
+  const tex = new THREE.CanvasTexture(c);
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  const redraw = (...args) => { ctx.clearRect(0, 0, w, h); draw(ctx, w, h, ...args); tex.needsUpdate = true; };
+  redraw();
+  return { tex, redraw, canvas: c };
+}
+// A label that always faces the camera
+function textSprite(text, { w = 320, h = 80, font = '600 34px "IBM Plex Sans", sans-serif', color = "#fff", scale = [5.2, 1.3] } = {}) {
+  const ct = canvasTex(w, h, (ctx, W_, H_, t = text) => {
+    ctx.font = font; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.lineWidth = 7; ctx.strokeStyle = "rgba(0,0,0,.6)"; ctx.lineJoin = "round";
+    ctx.strokeText(t, W_ / 2, H_ / 2); ctx.fillStyle = color; ctx.fillText(t, W_ / 2, H_ / 2);
+  });
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: ct.tex, transparent: true, depthTest: false }));
+  s.scale.set(scale[0], scale[1], 1); s.renderOrder = 10;
+  s.set = t => ct.redraw(t);
+  return s;
+}
+
+function buildWorld() {
+  const canvas = $("c");
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0B1630);
+  scene.fog = new THREE.Fog(0x0B1630, 150, 280);
+  camera = new THREE.PerspectiveCamera(46, 1.6, 1, 600);
+
+  W = {
+    places: new THREE.Vector3(-51, 2.2, 0), jumbo: new THREE.Vector3(0, 18, -63),
+    board: new THREE.Vector3(0, 1.4, -36.4), net: new THREE.Vector3(53, 1.8, 0)
+  };
+
+  // Lights: night match under floodlights
+  scene.add(new THREE.HemisphereLight(0xDCE6FF, 0x1E3A24, .85));
+  const sun = new THREE.DirectionalLight(0xFFF2D6, .9);
+  sun.position.set(-35, 70, 45); sun.castShadow = true;
+  Object.assign(sun.shadow.camera, { left: -75, right: 75, top: 55, bottom: -55, near: 10, far: 200 });
+  sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -0.0005; sun.shadow.camera.updateProjectionMatrix();
+  scene.add(sun, sun.target);
+
+  // Ground + pitch (stripes and markings painted on one texture)
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(320, 240), new THREE.MeshLambertMaterial({ color: 0x2A6A3B }));
+  ground.rotation.x = -Math.PI / 2; ground.position.y = -0.02; ground.receiveShadow = true; scene.add(ground);
+  const PX = 16, PW = 113, PH = 76;   // pitch texture covers 113 x 76 m (pitch + run-off)
+  const pitchTex = canvasTex(PW * PX, PH * PX, ctx => {
+    const X = x => (x + PW / 2) * PX, Z = z => (z + PH / 2) * PX;
+    ctx.fillStyle = "#33804A"; ctx.fillRect(0, 0, PW * PX, PH * PX);
+    for (let i = 0; i < 12; i++) if (i % 2 === 0) { ctx.fillStyle = "#3B8F52"; ctx.fillRect(X(-52.5 + i * 8.75), Z(-34), 8.75 * PX, 68 * PX); }
+    ctx.strokeStyle = "rgba(255,255,255,.92)"; ctx.lineWidth = 0.14 * PX;
+    const rect = (x1, z1, x2, z2) => ctx.strokeRect(X(x1), Z(z1), (x2 - x1) * PX, (z2 - z1) * PX);
+    rect(-52.5, -34, 52.5, 34);
+    ctx.beginPath(); ctx.moveTo(X(0), Z(-34)); ctx.lineTo(X(0), Z(34)); ctx.stroke();
+    ctx.beginPath(); ctx.arc(X(0), Z(0), 9.15 * PX, 0, Math.PI * 2); ctx.stroke();
+    for (const s of [-1, 1]) {
+      const g = s * 52.5;
+      rect(Math.min(g, g - s * 16.5), -20.16, Math.max(g, g - s * 16.5), 20.16);
+      rect(Math.min(g, g - s * 5.5), -9.16, Math.max(g, g - s * 5.5), 9.16);
+      ctx.beginPath(); ctx.arc(X(g - s * 11), Z(0), 9.15 * PX, s < 0 ? -0.93 : Math.PI - 0.93, s < 0 ? 0.93 : Math.PI + 0.93); ctx.stroke();
+      ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(X(g - s * 11), Z(0), .22 * PX, 0, 7); ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(X(0), Z(0), .25 * PX, 0, 7); ctx.fill();
+  });
+  const pitch = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), new THREE.MeshLambertMaterial({ map: pitchTex.tex }));
+  pitch.rotation.x = -Math.PI / 2; pitch.receiveShadow = true; scene.add(pitch);
+
+  buildGoals();
+  buildStand();
+  buildBoardAndScreen();
+  buildProps();
+  buildAgents();
+  buildBall();
+  buildConfetti();
+}
+
+function buildGoals() {
+  const netTex = canvasTex(64, 64, ctx => {
+    ctx.strokeStyle = "rgba(255,255,255,.75)"; ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, 62, 62);
+  });
+  netTex.tex.wrapS = netTex.tex.wrapT = THREE.RepeatWrapping; netTex.tex.repeat.set(10, 4);
+  const netMat = new THREE.MeshBasicMaterial({ map: netTex.tex, transparent: true, side: THREE.DoubleSide, depthWrite: false });
+  const postMat = M(0xFFFFFF, { emissive: 0x333333 });
+  for (const s of [-1, 1]) {
+    const g = new THREE.Group(); g.position.x = s * 52.5; g.scale.setScalar(1.7); scene.add(g);
+    const post = (y, z, len, rotX = 0, rotZ = 0) => {
+      const m = new THREE.Mesh(new THREE.CylinderGeometry(.08, .08, len, 8), postMat);
+      m.position.set(0, y, z); m.rotation.set(rotX, 0, rotZ); m.castShadow = true; g.add(m);
+    };
+    post(1.22, -3.66, 2.44); post(1.22, 3.66, 2.44); post(2.44, 0, 7.4, Math.PI / 2);
+    const depth = 2;
+    const back = new THREE.Mesh(new THREE.PlaneGeometry(7.32, 2.0), netMat);
+    back.rotation.y = Math.PI / 2; back.position.set(s * depth, 1.0, 0); g.add(back);
+    const top = new THREE.Mesh(new THREE.PlaneGeometry(depth + .1, 7.32), netMat);
+    top.rotation.x = -Math.PI / 2; top.position.set(s * depth / 2, 2.44, 0); g.add(top);
+    for (const z of [-3.66, 3.66]) {
+      const side = new THREE.Mesh(new THREE.PlaneGeometry(depth, 2.44), netMat);
+      side.position.set(s * depth / 2, 1.22, z); g.add(side);
+    }
+    goalBacks.push({ mesh: back, base: s * depth, s });
+    const lab = textSprite(s < 0 ? "GOOGLE PLACES" : "LEAD FILES", { w: 420, font: '600 36px "IBM Plex Mono", monospace', scale: [12.5, 2.35] });
+    lab.position.set(s * 52.5, 7, 0); scene.add(lab);
+  }
+}
+
+function buildStand() {
+  // Concrete tiers behind the far touchline
+  const ROWS = 10;
+  for (let r = 0; r < ROWS; r++) {
+    box(160, 1.2 + r * 1.2, 2.6, r % 2 ? 0x283241 : 0x222B38, scene, 0, (1.2 + r * 1.2) / 2, -41.5 - r * 2.6);
+  }
+  box(160, 1.6, .6, 0x161D28, scene, 0, .8, -39.9);
+  // The crowd: one instanced mesh for bodies, one for heads (fast, even with 1,500 fans)
+  let seed = 11;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const seats = [];
+  for (let r = 0; r < ROWS; r++) {
+    for (let x = -76; x <= 76; x += 1.05) {
+      if (rnd() < .07) continue;
+      seats.push({ x: x + (rnd() - .5) * .3, y: 1.2 + r * 1.2, z: -41.5 - r * 2.6 + (rnd() - .5) * .4, ph: rnd() * 6.28 });
+    }
+  }
+  const bodyGeo = new THREE.BoxGeometry(.62, .8, .42), headGeo = new THREE.IcosahedronGeometry(.24, 0);
+  const bodies = new THREE.InstancedMesh(bodyGeo, new THREE.MeshLambertMaterial(), seats.length);
+  const heads = new THREE.InstancedMesh(headGeo, new THREE.MeshLambertMaterial(), seats.length);
+  const shirts = [0x15306F, 0xF5C518, 0xF4F6FA, 0x2F7FE0, 0xC0392B, 0x15306F, 0xF5C518, 0x1E8C5A];
+  const skins = [0xF1C9A5, 0xE0A87C, 0xC98B5E, 0x8D5A3B, 0x5B3A29];
+  const col = new THREE.Color();
+  seats.forEach((p, i) => {
+    bodies.setColorAt(i, col.setHex(shirts[Math.floor(rnd() * shirts.length)]));
+    heads.setColorAt(i, col.setHex(skins[Math.floor(rnd() * skins.length)]));
+  });
+  scene.add(bodies, heads);
+  crowd = { seats, bodies, heads, m: new THREE.Matrix4() };
+  placeCrowd(0);
+}
+function placeCrowd(t) {
+  const { seats, bodies, heads, m } = crowd;
+  seats.forEach((p, i) => {
+    let lift = 0;
+    if (waveOn) {
+      const w = Math.sin(t * 5 - p.x * .09);
+      lift = Math.max(0, w) * 1.1 + Math.max(0, Math.sin(t * 9 + p.ph)) * .35;
+    }
+    m.makeTranslation(p.x, p.y + .4 + lift, p.z); bodies.setMatrixAt(i, m);
+    m.makeTranslation(p.x, p.y + 1.02 + lift, p.z); heads.setMatrixAt(i, m);
+  });
+  bodies.instanceMatrix.needsUpdate = true; heads.instanceMatrix.needsUpdate = true;
+}
+
+function buildBoardAndScreen() {
+  // Ad boards along the far touchline. The Meta Ad Library lives here.
+  board = canvasTex(4096, 48, (ctx, w, h, lit = false) => {
+    ctx.fillStyle = "#0B1424"; ctx.fillRect(0, 0, w, h);
+    ctx.font = '700 30px "IBM Plex Mono", monospace'; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    for (let i = 0; i < 7; i++) {
+      const x = (i + .5) * w / 7;
+      if (i === 3) {
+        ctx.fillStyle = lit ? "#F5C518" : "#1A2C4C"; ctx.fillRect(x - w / 14 + 6, 4, w / 7 - 12, h - 8);
+        ctx.fillStyle = lit ? "#13201A" : "#F5C518"; ctx.fillText("META AD LIBRARY", x, h / 2 + 1);
+      } else { ctx.fillStyle = "#DCE6FF"; ctx.fillText("PROSPECTOR FC", x, h / 2 + 1); }
+    }
+  });
+  const bmesh = new THREE.Mesh(new THREE.BoxGeometry(112, 1.3, .3), [M(0x0B1424), M(0x0B1424), M(0x0B1424), M(0x0B1424),
+    new THREE.MeshBasicMaterial({ map: board.tex }), M(0x0B1424)]);
+  bmesh.position.set(0, .65, -36.6); scene.add(bmesh);
+
+  // The big screen in the stands = the logbook
+  jumbo = canvasTex(512, 240, (ctx, w, h, mode = "log", n = 0, flash = false) => {
+    if (mode === "goal") {
+      ctx.fillStyle = flash ? "#F5C518" : "#15306F"; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = flash ? "#15306F" : "#F5C518";
+      ctx.font = '800 150px "Saira Condensed", sans-serif'; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText("GOAL!", w / 2, h / 2 + 8);
+      return;
+    }
+    ctx.fillStyle = "#12233F"; ctx.fillRect(0, 0, w, h);
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#F5C518"; ctx.font = '600 30px "IBM Plex Mono", monospace'; ctx.fillText("THE LOGBOOK", w / 2, 56);
+    ctx.fillStyle = "#fff"; ctx.font = '800 130px "Saira Condensed", sans-serif'; ctx.fillText(String(n), w / 2, 196);
+  });
+  const g = new THREE.Group(); g.position.set(0, 18, -66); scene.add(g);
+  box(23.5, 12, 1, 0x0A0F18, g, 0, 0, -.6);
+  box(1, 10, 1, 0x3A4558, g, -6, -9, -.8); box(1, 10, 1, 0x3A4558, g, 6, -9, -.8);
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(21.5, 10), new THREE.MeshBasicMaterial({ map: jumbo.tex }));
+  g.add(screen);
+}
+
+function buildProps() {
+  // Floodlight towers with a soft halo
+  const halo = canvasTex(128, 128, ctx => {
+    const gr = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gr.addColorStop(0, "rgba(255,246,216,.9)"); gr.addColorStop(1, "rgba(255,246,216,0)");
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, 128, 128);
+  });
+  for (const x of [-70, 70]) {
+    box(1.2, 38, 1.2, 0x3A4558, scene, x, 19, -52);
+    const head = new THREE.Mesh(new THREE.BoxGeometry(9, 4, 1), new THREE.MeshBasicMaterial({ color: 0xFFF6D8 }));
+    head.position.set(x, 39, -51.3); head.lookAt(0, 0, 0); scene.add(head);
+    const h = new THREE.Sprite(new THREE.SpriteMaterial({ map: halo.tex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    h.scale.set(40, 40, 1); h.position.set(x, 39, -50); scene.add(h);
+  }
+  // Manager's bench on the near side
+  box(9, .5, 1.2, 0x2A3443, scene, 0, .45, 40.5);
+  box(9, 1.6, .25, 0x2A3443, scene, 0, 1.1, 41.1);
+  // Inbox: a mailbox by the near right corner flag
+  const mb = new THREE.Group(); mb.position.set(51, 0, 36.5); mb.scale.setScalar(1.8); scene.add(mb);
+  box(.18, 1.1, .18, 0x5A4632, mb, 0, .55, 0);
+  box(.8, .55, 1.1, KIT, mb, 0, 1.35, 0);
+  const lid = new THREE.Mesh(new THREE.CylinderGeometry(.4, .4, 1.1, 10, 1, false, 0, Math.PI), M(KIT));
+  lid.rotation.x = Math.PI / 2; lid.rotation.z = -Math.PI / 2; lid.position.set(0, 1.62, 0); lid.castShadow = true; mb.add(lid);
+  mailFlag = new THREE.Group(); mailFlag.position.set(.42, 1.3, .3); mb.add(mailFlag);
+  box(.04, .6, .06, 0xC0392B, mailFlag, 0, .3, 0); box(.04, .2, .3, 0xC0392B, mailFlag, 0, .5, .15);
+  const ilab = textSprite("INBOX", { w: 200, font: '600 36px "IBM Plex Mono", monospace', scale: [5.2, 2.1] });
+  ilab.position.set(51, 6.2, 36.5); scene.add(ilab);
+  envelope = textSprite("✉", { w: 128, h: 128, font: '700 110px "IBM Plex Sans", sans-serif', color: "#fff", scale: [3, 3] });
+  envelope.position.set(51, 9, 36.5); envelope.visible = false; scene.add(envelope);
+  // Corner flags
+  for (const [x, z] of [[-52.5, -34], [52.5, -34], [-52.5, 34], [52.5, 34]]) {
+    box(.12, 2.6, .12, 0xFFFFFF, scene, x, 1.3, z);
+    box(.05, .6, .9, YELLOW, scene, x, 2.3, z + .45);
+  }
+}
+
+// ---- agents: little low-poly players ----
+const LOOK = {
+  mgr:    { skin: 0xC98B5E, hair: 0x2B1D14, style: "short", shirt: KIT,    ink: "#fff" },
+  sct:    { skin: 0xF1C9A5, hair: 0xC9772E, style: "cap",   shirt: KIT,    ink: "#fff" },
+  chk:    { skin: 0xE0A87C, hair: 0x3B2416, style: "long",  shirt: YELLOW, ink: "#1b1600" },
+  strict: { skin: 0x8D5A3B, hair: 0x151010, style: "short", shirt: WHITE,  ink: "#15306F", coach: true },
+  loose:  { skin: 0xF3D2B3, hair: 0x8A5A2B, style: "bun",   shirt: WHITE,  ink: "#15306F", coach: true },
+  hunter: { skin: 0xB97A50, hair: 0x2A1B12, style: "spiky", shirt: WHITE,  ink: "#15306F", coach: true },
+  sec:    { skin: 0xEBC09A, hair: 0x5A3A22, style: "long",  shirt: KIT,    ink: "#fff" },
+};
+const NAMES = { mgr: "Manager", sct: "Scout", chk: "Ad checker", strict: "Strict", loose: "Loose", hunter: "Hunter", sec: "Secretary" };
+const LONG_NAMES = { mgr: "Manager", sct: "Scout", chk: "Ad checker (you)", strict: "Strict coach", loose: "Loose coach", hunter: "Website hunter", sec: "Secretary" };
+const CODES = { mgr: "MGR", sct: "SCT", chk: "CHK", strict: "STR", loose: "LSE", hunter: "HNT", sec: "SEC" };
+const SCALE = 2.1;
+
+function makeAgent(id) {
+  const L = LOOK[id];
+  const root = new THREE.Group(); scene.add(root);
+  const body = new THREE.Group(); body.scale.setScalar(SCALE); root.add(body);
+  const legs = [], arms = [];
+  for (const sx of [-.15, .15]) {
+    const hip = new THREE.Group(); hip.position.set(sx, .82, 0); body.add(hip);
+    box(.2, .42, .22, L.skin, hip, 0, -.2, 0);
+    box(.21, .36, .23, 0xFFFFFF, hip, 0, -.58, 0);
+    box(.24, .13, .36, DARK, hip, 0, -.77, .05);
+    legs.push(hip);
+  }
+  box(.58, .32, .34, 0x0E1A33, body, 0, .88, 0);                 // shorts
+  box(.62, .66, .36, L.shirt, body, 0, 1.34, 0);                 // shirt
+  const num = canvasTex(128, 64, ctx => {
+    ctx.fillStyle = L.ink; ctx.font = '800 50px "Saira Condensed", sans-serif';
+    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(CODES[id], 64, 35);
+  });
+  for (const [z, ry] of [[.185, 0], [-.185, Math.PI]]) {
+    const n = new THREE.Mesh(new THREE.PlaneGeometry(.5, .25), new THREE.MeshBasicMaterial({ map: num.tex, transparent: true }));
+    n.position.set(0, 1.4, z); n.rotation.y = ry; body.add(n);
+  }
+  for (const sx of [-.41, .41]) {
+    const sh = new THREE.Group(); sh.position.set(sx, 1.6, 0); body.add(sh);
+    box(.17, .56, .19, L.shirt, sh, 0, -.27, 0);
+    box(.15, .15, .15, L.skin, sh, 0, -.6, 0);
+    arms.push(sh);
+  }
+  if (L.coach) box(.28, .36, .04, 0xEADBB0, arms[1], 0, -.55, .14);   // clipboard
+  const head = new THREE.Mesh(new THREE.IcosahedronGeometry(.29, 1), M(L.skin));
+  head.position.y = 1.98; head.castShadow = true; body.add(head);
+  box(.05, .08, .02, 0x1A1A1A, body, -.1, 2.0, .27);
+  box(.05, .08, .02, 0x1A1A1A, body, .1, 2.0, .27);
+  box(.13, .025, .02, 0x1A1A1A, body, 0, 1.88, .275);
+  const hairTop = new THREE.Mesh(new THREE.SphereGeometry(.31, 8, 5, 0, Math.PI * 2, 0, Math.PI / 2.1), M(L.style === "cap" ? YELLOW : L.hair));
+  hairTop.position.y = 2.0; body.add(hairTop);
+  if (L.style === "cap") box(.36, .04, .26, YELLOW, body, 0, 2.06, .26);
+  if (L.style === "long") box(.58, .55, .16, L.hair, body, 0, 1.86, -.2);
+  if (L.style === "bun") { const b = new THREE.Mesh(new THREE.IcosahedronGeometry(.13, 0), M(L.hair)); b.position.set(0, 2.32, -.12); body.add(b); }
+  if (L.style === "spiky") for (let i = 0; i < 6; i++) {
+    const c = new THREE.Mesh(new THREE.ConeGeometry(.07, .2, 4), M(L.hair));
+    const a = i / 6 * Math.PI * 2; c.position.set(Math.cos(a) * .17, 2.27, Math.sin(a) * .17); body.add(c);
+  }
+  const ring = new THREE.Mesh(new THREE.RingGeometry(1.5, 1.95, 32), new THREE.MeshBasicMaterial({ color: YELLOW, transparent: true, opacity: .9, depthWrite: false }));
+  ring.rotation.x = -Math.PI / 2; ring.position.y = .04; ring.visible = false; root.add(ring);
+  const label = textSprite(NAMES[id], { scale: [8.4, 2.1] }); label.position.y = 6.6; root.add(label);
+  let tally = null;
+  if (L.coach) {
+    // The coach's score: big number of leads signed, with the word LEADS under it
+    const tt = canvasTex(200, 150, (ctx, w, h, n = "0") => {
+      ctx.textAlign = "center"; ctx.lineJoin = "round"; ctx.strokeStyle = "rgba(0,0,0,.6)";
+      ctx.font = '800 92px "Saira Condensed", sans-serif'; ctx.lineWidth = 8;
+      ctx.strokeText(n, w / 2, 84); ctx.fillStyle = "#fff"; ctx.fillText(n, w / 2, 84);
+      ctx.font = '700 30px "IBM Plex Mono", monospace'; ctx.lineWidth = 6;
+      ctx.strokeText("LEADS", w / 2, 128); ctx.fillStyle = "#F5C518"; ctx.fillText("LEADS", w / 2, 128);
+    });
+    tally = new THREE.Sprite(new THREE.SpriteMaterial({ map: tt.tex, transparent: true, depthTest: false }));
+    tally.scale.set(5.6, 4.2, 1); tally.renderOrder = 10; tally.set = n => tt.redraw(n);
+    tally.position.set(4.4, 4.2, 0); root.add(tally);
+  }
+  A[id] = { id, root, body, legs, arms, ring, tally, pos: [...P[id]], rot: 0, dir: 0, walk: 0, moving: false,
+            phase: Math.random() * 6, seed: Math.random() * 2, crouch: 0, active: false, hopUntil: 0 };
+}
+function buildAgents() { for (const id of Object.keys(LOOK)) makeAgent(id); }
+
+// ---- the ball: whoever has it is the agent working right now ----
+function buildBall() {
+  const g = new THREE.IcosahedronGeometry(.36, 1);
+  const pos = g.attributes.position, colors = [];
+  const phi = (1 + Math.sqrt(5)) / 2;
+  const ico = [[0, 1, phi], [0, -1, phi], [0, 1, -phi], [0, -1, -phi], [1, phi, 0], [-1, phi, 0], [1, -phi, 0], [-1, -phi, 0], [phi, 0, 1], [-phi, 0, 1], [phi, 0, -1], [-phi, 0, -1]]
+    .map(v => new THREE.Vector3(...v).normalize());
+  const c = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i += 3) {
+    c.set(0, 0, 0);
+    for (let k = 0; k < 3; k++) c.add(new THREE.Vector3(pos.getX(i + k), pos.getY(i + k), pos.getZ(i + k)));
+    c.normalize();
+    const black = ico.some(v => v.dot(c) > .93);
+    for (let k = 0; k < 3; k++) colors.push(...(black ? [.08, .08, .1] : [.97, .97, .97]));
+  }
+  g.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+  ball = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, roughness: .6 }));
+  ball.scale.setScalar(1.6); ball.castShadow = true; scene.add(ball);
+}
+const BALL_R = .36 * 1.6;
+function feet(id) {
+  const a = A[id];
+  return new THREE.Vector3(a.pos[0] + Math.sin(a.rot) * 1.5 + .6, BALL_R, a.pos[1] + Math.cos(a.rot) * 1.5);
+}
+function setBall(id) {
+  ballOwner = id; ballState = { mode: "held" };
+  if (GL) ball.position.copy(feet(id));
+  $("onball").textContent = LONG_NAMES[id];
+}
+function ballTo(id, ms = 700) {
+  const from = ball.position.clone(), to = feet(id);
+  ballOwner = id; $("onball").textContent = LONG_NAMES[id];
+  const dur = T(ms + from.distanceTo(to) * 6);
+  if (!dur) { setBall(id); return; }
+  ballState = { mode: "flight", from, to, t0: performance.now(), dur, h: Math.min(9, 1.5 + from.distanceTo(to) * .14), next: "held" };
+  ballBusyUntil = performance.now() + dur + T(320);
+}
+function shootAt(target, ms = 650) {
+  const from = ball.position.clone();
+  const dur = T(ms);
+  if (!dur) { ball.position.copy(target); ballState = { mode: "rest" }; return; }
+  ballState = { mode: "flight", from, to: target.clone(), t0: performance.now(), dur, h: 2.2, next: "rest" };
+}
+
+// ---- confetti for goals ----
+function buildConfetti() {
+  const N = 360;
+  const mesh = new THREE.InstancedMesh(new THREE.PlaneGeometry(.55, .32), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }), N);
+  const pal = [0xF5C518, 0xFFFFFF, 0x2F7FE0, 0xE0559E, 0x15306F, 0x8A63E0];
+  const col = new THREE.Color();
+  const parts = [];
+  for (let i = 0; i < N; i++) {
+    mesh.setColorAt(i, col.setHex(pal[i % pal.length]));
+    parts.push({ p: new THREE.Vector3(), v: new THREE.Vector3(), r: new THREE.Euler(), s: Math.random() * 4 + 2 });
+  }
+  mesh.count = 0; mesh.frustumCulled = false; scene.add(mesh);
+  confetti = { mesh, parts, N, o: new THREE.Object3D() };
+}
+function launchConfetti() {
+  confetti.parts.forEach(c => {
+    c.p.set((Math.random() - .5) * 110, 26 + Math.random() * 18, (Math.random() - .5) * 70 - 5);
+    c.v.set((Math.random() - .5) * 3, -4 - Math.random() * 4, (Math.random() - .5) * 3);
+    c.r.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+  });
+  confetti.mesh.count = confetti.N; confettiOn = true;
+}
+
+// ------------------------------------------------------------------
+// THE RENDER LOOP: moves players, ball, camera, crowd, confetti
+// ------------------------------------------------------------------
+const angleTo = (a, b) => { let d = (b - a) % (Math.PI * 2); if (d > Math.PI) d -= Math.PI * 2; if (d < -Math.PI) d += Math.PI * 2; return d; };
+let last = performance.now(), visible = true;
+function frame(now) {
+  requestAnimationFrame(frame);
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  // tweens
+  for (const t of tweens.slice()) {
+    const p = Math.min(1, (now - t.t0) / t.dur);
+    t.fn(p);
+    if (p >= 1) { t.res(); tweens.splice(tweens.indexOf(t), 1); }
+  }
+  if (!GL || !visible) return;
+  const k = 1 - Math.exp(-dt * 10);
+  // agents
+  for (const a of Object.values(A)) {
+    a.root.position.set(a.pos[0], 0, a.pos[1]);
+    const target = a.moving ? a.dir : 0;
+    a.rot += angleTo(a.rot, target) * k;
+    a.body.rotation.y = a.rot;
+    a.walk += ((a.moving ? 1 : 0) - a.walk) * (1 - Math.exp(-dt * 12));
+    a.phase += dt * 11;
+    const sw = Math.sin(a.phase) * .8 * a.walk;
+    a.legs[0].rotation.x = sw; a.legs[1].rotation.x = -sw;
+    let y = Math.abs(Math.sin(a.phase)) * .25 * a.walk;
+    const party = now < a.hopUntil;
+    if (party) {
+      y += Math.abs(Math.sin(now / 1000 * 8 + a.seed * 3)) * 1.6;
+      a.arms[0].rotation.set(0, 0, -2.7); a.arms[1].rotation.set(0, 0, 2.7);
+    } else {
+      a.arms[0].rotation.set(-sw * .9 + Math.sin(now / 900 + a.seed) * .05, 0, 0);
+      a.arms[1].rotation.set(sw * .9 - Math.sin(now / 900 + a.seed) * .05, 0, 0);
+      if (a.active && !a.moving && !reduceMotion) {
+        const c = (now / 1000 + a.seed) % 1.8;
+        if (c < .4) { y += Math.sin(c / .4 * Math.PI) * .7; a.arms[1].rotation.set(0, 0, 2.2 * Math.sin(c / .4 * Math.PI)); }
+      }
+    }
+    a.body.position.y = y;
+    a.body.scale.set(SCALE, SCALE * (a.crouch ? .86 : 1), SCALE);
+    a.ring.visible = a.active;
+    if (a.active) { const s = 1 + Math.sin(now / 180) * .07; a.ring.scale.set(s, s, s); }
+  }
+  // ball
+  if (ballState.mode === "flight") {
+    const s = ballState, p = Math.min(1, (now - s.t0) / s.dur);
+    ball.position.lerpVectors(s.from, s.to, p);
+    ball.position.y = s.from.y + (s.to.y - s.from.y) * p + 4 * s.h * p * (1 - p);
+    ball.rotation.x += dt * 14; ball.rotation.z += dt * 6;
+    if (p >= 1) {
+      if (s.next === "held") ballState = { mode: "bounce", t0: now, dur: T(320) || 1 };
+      else ballState = { mode: "rest" };
+    }
+  } else if (ballState.mode === "bounce" || ballState.mode === "held") {
+    const f = feet(ballOwner);
+    const before = ball.position.clone();
+    ball.position.x += (f.x - ball.position.x) * (1 - Math.exp(-dt * 14));
+    ball.position.z += (f.z - ball.position.z) * (1 - Math.exp(-dt * 14));
+    let y = BALL_R;
+    if (ballState.mode === "bounce") {
+      const p = Math.min(1, (now - ballState.t0) / ballState.dur);
+      y += Math.abs(Math.sin(p * Math.PI * 2)) * (1 - p) * 1.2;   // two little hops after landing
+      if (p >= 1) ballState = { mode: "held" };
+    }
+    ball.position.y = y;
+    const moved = ball.position.clone().sub(before);
+    ball.rotation.x += moved.z / BALL_R; ball.rotation.z -= moved.x / BALL_R;
+  }
+  // net bulge settles back
+  for (const g of goalBacks) g.mesh.position.x += (g.base - g.mesh.position.x) * (1 - Math.exp(-dt * 4));
+  // crowd + confetti
+  if (waveOn) placeCrowd(now / 1000);
+  if (confettiOn) {
+    const { parts, mesh, o } = confetti;
+    parts.forEach((c, i) => {
+      c.p.addScaledVector(c.v, dt); c.p.x += Math.sin(now / 400 + i) * dt * 1.5;
+      c.r.x += dt * c.s; c.r.y += dt * c.s * .7;
+      o.position.copy(c.p); o.rotation.copy(c.r); o.updateMatrix(); mesh.setMatrixAt(i, o.matrix);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+  }
+  // camera: a broadcast camera that follows whoever has the ball
+  let fx = 0, fz = 0, fov = 46;
+  if (camOverride) { fx = camOverride.x; fz = camOverride.z; fov = camOverride.fov; }
+  else if (camFocus && A[camFocus]) { fx = Math.max(-30, Math.min(30, A[camFocus].pos[0])); fz = A[camFocus].pos[1]; fov = 36; }
+  const kc = 1 - Math.exp(-dt * 1.8);
+  camState.x += (fx - camState.x) * kc; camState.z += (fz - camState.z) * kc; camState.fov += (fov - camState.fov) * kc;
+  camera.fov = camState.fov; camera.updateProjectionMatrix();
+  camera.position.set(camState.x * .75, 27, 80 + camState.z * .2);
+  camera.lookAt(camState.x * .92, 1.5, camState.z * .5 - 5);
+  renderer.render(scene, camera);
+  placeTags();
+}
+
+// ---- HTML tags pinned to 3D spots (search bubble, YOU badge) ----
+const tags = [];
+function pinTag(el, getPos) { tags.push({ el, getPos }); }
+const projV = typeof THREE !== "undefined" ? new THREE.Vector3() : null;
+function placeTags() {
+  const st = $("stage"), w = st.clientWidth, h = st.clientHeight;
+  for (const t of tags) {
+    if (t.el.hidden) continue;
+    projV.copy(t.getPos()).project(camera);
+    t.el.style.left = ((projV.x + 1) / 2 * w) + "px";
+    t.el.style.top = ((1 - projV.y) / 2 * h) + "px";
+  }
+}
+
+function resize() {
+  if (!GL) return;
+  const st = $("stage"), w = st.clientWidth, h = st.clientHeight;
+  renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+
+// ---- world actions used by the match script ----
+function active(...ids) {
+  for (const k in A) A[k].active = ids.includes(k);
+  camFocus = ids[0] || null;
+  if (ids.length === 1 && ids[0] !== ballOwner) { if (GL) ballTo(ids[0]); else setBall(ids[0]); }
+}
+async function moveTo(id, to, ms = 1000) {
+  if (!GL) return;
+  const a = A[id];
+  if (ballOwner === id) { const w = ballBusyUntil - performance.now(); if (w > 0) await sleep(w); }
+  if (!T(ms)) { a.pos = [...to]; return; }
+  a.crouch = 1; await sleep(T(150)); a.crouch = 0;           // anticipation: a little crouch before running
+  const from = [...a.pos];
+  a.dir = Math.atan2(to[0] - from[0], to[1] - from[1]); a.moving = true;
+  await tween(ms, p => { const e = ease(p); a.pos = [from[0] + (to[0] - from[0]) * e, from[1] + (to[1] - from[1]) * e]; });
+  a.moving = false;
+}
+function fly(type, from, to, delay = 0, ms = 900) {
+  if (!GL || !T(ms)) return Promise.resolve();
+  const m = new THREE.Mesh(new THREE.IcosahedronGeometry(.55, 1), new THREE.MeshBasicMaterial({ color: TYPE_HEX[type] || YELLOW }));
+  const j = () => (Math.random() - .5) * 2.4;
+  const a = from.clone().add(new THREE.Vector3(j(), j() * .4, j())), b = to.clone().add(new THREE.Vector3(j(), j() * .4, j()));
+  const h = 4 + a.distanceTo(b) * .12;
+  m.visible = false; scene.add(m); dots.add(m);
+  return sleep(T(delay)).then(() => {
+    m.visible = true;
+    return tween(ms, p => { m.position.lerpVectors(a, b, p); m.position.y += 4 * h * p * (1 - p); });
+  }).then(() => { scene.remove(m); dots.delete(m); });
+}
+function setLogbook(n) { if (GL) jumbo.redraw("log", n); }
+function setTally(c, n) { if (GL) A[c].tally.set(String(n)); $("s-" + c).textContent = n; }
+function setBacklog(n) {
+  $("backfill").style.width = Math.min(100, n / REPORT.backlog_limit * 100) + "%";
+  $("backtxt").textContent = `${n} / ${REPORT.backlog_limit}`;
+}
+function boardLit(on) { if (GL) board.redraw(on); }
+function mail(sent) { if (!GL) return; mailFlag.rotation.x = sent ? -Math.PI / 2 : 0; envelope.visible = sent; }
+
+async function celebrate(fromId = "loose") {
+  if (!GL) return;
+  celebrating = true;
+  camOverride = { x: 30, z: 2, fov: 30 };
+  active(fromId);
+  await wait(900);
+  const shooter = A[fromId];
+  shooter.crouch = 1; await wait(160); shooter.crouch = 0;
+  shootAt(W.net.clone().add(new THREE.Vector3(1.2, 0, 0)), 600);
+  await wait(600);
+  goalBacks[1].mesh.position.x = goalBacks[1].base + .9;     // the net bulges
+  $("goalBanner").hidden = false;
+  const now = performance.now();
+  for (const a of Object.values(A)) a.hopUntil = now + T(3200);
+  waveOn = !reduceMotion; if (!reduceMotion) launchConfetti();
+  let flash = false;
+  const iv = setInterval(() => { flash = !flash; jumbo.redraw("goal", 0, flash); }, 260);
+  await wait(3400);
+  clearInterval(iv);
+  $("goalBanner").hidden = true;
+  waveOn = false; placeCrowd(0);
+  confettiOn = false; confetti.mesh.count = 0;
+  camOverride = null; active();
+  celebrating = false;
+}
+
+// ------------------------------------------------------------------
+// THE MATCH SCRIPT, written from the report
+// ------------------------------------------------------------------
+function buildSteps() {
+  const R = REPORT, s = R.search, ad = R.ad_check;
+  const below = R.new - ad.worth_checking;
+  const typeLabel = s.business_type;
+  const steps = [
+    { min: 1, say: `Kickoff. The manager counts the backlog: ${R.backlog_start} ${R.backlog_start === 1 ? "business" : "businesses"} waiting for an ad check, limit ${R.backlog_limit}. There's room, so the scout goes out.`,
+      run: async () => { active("mgr"); setBacklog(R.backlog_start); await wait(1200); } },
+  ];
+  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  if (s.searches_used > 0) {
+    steps.push(
+      { min: 6, say: `The scout searches Google Places for "${typeLabel} in ${s.city}". Search ${s.searches_used} of ${s.max_searches} allowed today.`,
+        run: async () => {
+          active("sct"); $("callout").textContent = `🔎 ${typeLabel} in ${s.city}`; $("callout").hidden = false;
+          await moveTo("sct", P.sctGoal, 1400); await wait(700);
+        } },
+      { min: 14, say: `The scout is back with ${plural(R.new, "new business", "new businesses")}. Everyone else was already in the logbook, so they stay out. Logbook: ${R.logbook_before} → ${R.logbook_before + R.new}.`,
+        run: async () => {
+          $("callout").hidden = true;
+          const back = moveTo("sct", P.sct, 1200);
+          const fl = [];
+          for (let i = 0; i < R.new; i++) fl.push(fly(s.business_type, W.places, W.jumbo, i * 180, 1100));
+          count(R.logbook_before, R.logbook_before + R.new, 1600, setLogbook);
+          await Promise.all([back, ...fl]); await wait(300);
+        } });
+  } else {
+    steps.push({ min: 6, say: `No search today. The backlog was at the limit, so the scout rests and the club works through the businesses already waiting.`,
+      run: async () => { active("sct"); await wait(1400); } });
+  }
+  steps.push(
+    { min: 27, human: true, say: `Ad check. ${plural(ad.worth_checking, "business goes", "businesses go")} to the Meta Ad Library. ${ad.counted} counted, ${ad.skipped} left for later. Meta doesn't allow bots here, so I type the counts.`,
+      run: async () => {
+        active("chk"); $("you").hidden = false; boardLit(true);
+        await moveTo("chk", P.chkBoard, 1100);
+        const t = s.business_type || Object.keys(R.checked_by_type)[0];
+        const up = [];
+        for (let i = 0; i < ad.worth_checking; i++) up.push(fly(t, W.jumbo, W.board, i * 220, 900));
+        await Promise.all(up); await wait(500);
+        const down = [];
+        for (let i = 0; i < ad.counted; i++) down.push(fly(t, W.board, W.jumbo, i * 220, 900));
+        await Promise.all(down);
+        $("you").hidden = true; boardLit(false);
+        await moveTo("chk", P.chk, 900);
+      } });
+  const coachInfo = [
+    ["strict", 41, "Strict coach (4.5+ stars, zero ads)"],
+    ["loose", 55, "Loose coach (4.0+ stars, fewer than 3 ads)"],
+    ["hunter", 68, "Website hunter (no website, or an outdated one)"],
+  ];
+  for (const [c, min, desc] of coachInfo) {
+    const total = sum(R[c]);
+    const parts = Object.entries(R[c]).map(([t, n]) => `${n} ${t}`).join(", ");
+    steps.push({ min, say: `${desc} judges all ${R.checked} checked businesses and signs ${total}: ${parts}.`,
+      run: async () => {
+        active(c); await wait(500);
+        const fl = []; let i = 0;
+        for (const [t, n] of Object.entries(R[c])) for (let k = 0; k < n; k++) fl.push(fly(t, W.jumbo, W.net, (i++) * 30, 1000));
+        count(0, total, 1000 + i * 30, n => setTally(c, n));
+        await Promise.all(fl); await wait(300);
+      } });
+  }
+  steps.push(
+    { min: 82, say: `Recount. Backlog is now ${R.backlog_end} of ${R.backlog_limit} (started at ${R.backlog_start}, ${ad.counted} counted today). ${R.backlog_end >= R.backlog_limit ? "Next run works the backlog, no new search." : "Next run can scout somewhere new."}`,
+      run: async () => { active("mgr"); await wait(500); setBacklog(R.backlog_end); await wait(1000); } },
+    { min: 90, say: `The secretary emails the summary: "Prospector: ${sum(R.strict)} strict leads, backlog ${R.backlog_end}". Full time.`,
+      run: async () => { active("sec"); await moveTo("sec", P.secInbox, 900); mail(true); await wait(900); } }
+  );
+  const g = R.goals || {};
+  if (g.clients > 0) steps.push({ min: 90, say: `GOAL! ${g.clients} business${g.clients === 1 ? " has" : "es have"} become a client: ${g.ads} ad${g.ads === 1 ? "" : "s"} and ${g.websites} website${g.websites === 1 ? "" : "s"} created.`,
+    run: async () => { await celebrate("loose"); } });
+  return steps;
+}
+
+// ---- render: rest state (full time) and replay ----
+let runId = 0, STEPS = [];
+function feedItem(step, now) {
+  const li = document.createElement("li");
+  if (step.human) li.classList.add("human");
+  if (now) li.classList.add("now");
+  li.innerHTML = `<span class="min">${step.min}'</span><p></p>`;
+  li.querySelector("p").textContent = step.say;
+  return li;
+}
+function resetWorld() {
+  killTweens();
+  for (const m of dots) scene && scene.remove(m); dots.clear();
+  for (const id in A) { const a = A[id]; a.pos = [...P[id]]; a.moving = false; a.walk = 0; a.crouch = 0; a.hopUntil = 0; a.rot = 0; }
+  active(); camOverride = null;
+  $("callout").hidden = true; $("you").hidden = true; $("goalBanner").hidden = true;
+  if (GL) { boardLit(false); waveOn = false; placeCrowd(0); confettiOn = false; confetti.mesh.count = 0; }
+  mail(false);
+  setBall("mgr");
+}
+function fullTime() {
+  runId++;
+  resetWorld();
+  const R = REPORT;
+  setLogbook(R.logbook_before + R.new);
+  setBacklog(R.backlog_end);
+  for (const c of ["strict", "loose", "hunter"]) setTally(c, sum(R[c]));
+  if (A.sec) A.sec.pos = [...P.secInbox];
+  setBall("sec"); mail(R.email_sent);
+  $("clock").textContent = "90'"; $("status").textContent = "Full time";
+  const feed = $("feed"); feed.innerHTML = "";
+  STEPS.slice().reverse().forEach((s, i) => feed.appendChild(feedItem(s, i === 0)));
+  $("btn-play").textContent = "Watch the replay";
+}
+async function replay() {
+  const id = ++runId;
+  resetWorld();
+  const R = REPORT;
+  setLogbook(R.logbook_before); setBacklog(0);
+  for (const c of ["strict", "loose", "hunter"]) setTally(c, 0);
+  const feed = $("feed");
+  feed.innerHTML = `<li class="empty">The players are walking out…</li>`;
+  $("status").textContent = "Live"; $("btn-play").textContent = "Restart";
+  await wait(600);
+  for (const step of STEPS) {
+    if (id !== runId) return;
+    $("clock").textContent = step.min + "'";
+    feed.querySelectorAll(".now, .empty").forEach(n => n.classList.contains("empty") ? n.remove() : n.classList.remove("now"));
+    feed.prepend(feedItem(step, true));
+    await step.run();
+    if (id !== runId) return;
+    await wait(700);
+  }
+  if (id === runId) fullTime();
+}
+async function previewGoal() {
+  if (!GL || celebrating) return;
+  fullTime();
+  const id = runId;
+  const feed = $("feed");
+  feed.querySelectorAll(".now").forEach(n => n.classList.remove("now"));
+  feed.prepend(feedItem({ min: "★", say: "Preview: when a business becomes a client (I made their ad or website), it's a goal. This is what that moment will look like." }, true));
+  await celebrate("loose");
+  if (id === runId) setBall("sec");
+}
+
+function renderStats() {
+  const R = REPORT;
+  const types = Object.keys(R.checked_by_type);
+  let h = `<thead><tr><th>Type</th><th>Checked</th><th>Strict</th><th>Loose</th><th>Hunter</th></tr></thead><tbody>`;
+  for (const t of types) {
+    h += `<tr><td><span class="sw" style="background:${TYPE_CSS[t] || "var(--armband)"}"></span>${t}</td><td>${R.checked_by_type[t]}</td><td>${R.strict[t] || 0}</td><td>${R.loose[t] || 0}</td><td>${R.hunter[t] || 0}</td></tr>`;
+  }
+  h += `</tbody><tfoot><tr><td>Total</td><td>${sum(R.checked_by_type)}</td><td>${sum(R.strict)}</td><td>${sum(R.loose)}</td><td>${sum(R.hunter)}</td></tr></tfoot>`;
+  $("stats").innerHTML = h;
+  const g = R.goals || { clients: 0, ads: 0, websites: 0 };
+  $("s-goal").textContent = g.clients;
+  $("goal-split").textContent = `${g.ads} ad${g.ads === 1 ? "" : "s"} · ${g.websites} site${g.websites === 1 ? "" : "s"}`;
+  const d = new Date(R.date + "T12:00:00");
+  const nice = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  $("matchdate").textContent = `Matchday replay · ${nice}`;
+  $("foot").textContent = `Replay of the run on ${nice}. ${R.to_do} businesses are still on the to-do list for an ad check. Business names stay private: this page shows counts and business types only.`;
+}
+
+async function start() {
+  try {
+    const r = await fetch("match_report.json", { cache: "no-store" });
+    if (r.ok) REPORT = await r.json();
+  } catch (e) { /* no report file here: use the built-in one */ }
+  try { await document.fonts.ready; } catch (e) {}
+  try {
+    if (typeof THREE === "undefined") throw new Error("3D library did not load");
+    buildWorld(); GL = true;
+    pinTag($("callout"), () => new THREE.Vector3(A.sct.pos[0], 8.4, A.sct.pos[1]));
+    pinTag($("you"), () => new THREE.Vector3(13, 3.6, -36.6));
+    resize();
+    new ResizeObserver(resize).observe($("stage"));
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe($("stage"));
+  } catch (e) {
+    console.error(e);
+    GL = false;
+    $("fallback").hidden = false;
+    for (const b of ["btn-play", "btn-goal"]) $(b).disabled = true;
+  }
+  STEPS = buildSteps();
+  renderStats();
+  fullTime();
+  requestAnimationFrame(frame);
+}
+
+$("btn-play").addEventListener("click", replay);
+$("btn-skip").addEventListener("click", fullTime);
+$("btn-goal").addEventListener("click", previewGoal);
+$("btn-speed").addEventListener("click", e => {
+  speed = speed === 1 ? 2 : 1;
+  e.currentTarget.textContent = `Speed ${speed}×`;
+  e.currentTarget.setAttribute("aria-pressed", speed === 2);
+});
+start();
+</script>
+
+</html>
